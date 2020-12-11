@@ -80,6 +80,14 @@ Window::~Window()
 	DestroyWindow( hWnd );
 }
 
+void Window::SetTitle( const std::string& title )
+{
+	if ( SetWindowText( hWnd,title.c_str() ) )
+	{
+		assert( "Couldn't set window title" && false );
+	}
+}
+
 std::optional<int> Window::ProcessMessages() noexcept
 {
 	MSG msg;
