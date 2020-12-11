@@ -21,7 +21,7 @@ Window::WindowClass::WindowClass() noexcept
 	WNDCLASSEX wc = { 0 };
 	wc.cbSize = sizeof( wc );
 	wc.style = CS_OWNDC;
-	wc.lpfnWndProc = HandleMsg;
+	wc.lpfnWndProc = HandleMsgSetup;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetInstance();
@@ -96,7 +96,34 @@ std::optional<int> Window::ProcessMessages() noexcept
 	return {};
 }
 
-LRESULT CALLBACK Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
+LRESULT CALLBACK Window::HandleMsgSetup( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
+{
+	if ( msg == WM_NCCREATE )
+	{
+		// get pointer to create struct
+		const auto createStruct = reinterpret_cast<CREATESTRUCT*>( lParam );
+		// extract pointer to Window class instance from create params
+		auto* const pWnd = static_cast<Window*>( createStruct->lpCreateParams );
+		// store pointer to pointer to instance in user data
+		SetWindowLongPtr( hWnd,GWLP_USERDATA,reinterpret_cast<LONG_PTR>( pWnd ) );
+		// change msg process function to HandleMsgThunk
+		SetWindowLongPtr( hWnd,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>( &Window::HandleMsgThunk ) );
+		// call the member message handling routine
+		return pWnd->HandleMsg( hWnd,msg,wParam,lParam );
+	}
+
+	return DefWindowProc( hWnd,msg,wParam,lParam );
+}
+
+LRESULT CALLBACK Window::HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
+{
+	// retrieve pointer to Window instance
+	auto* const pWnd = reinterpret_cast<Window*>( GetWindowLongPtr( hWnd,GWLP_USERDATA ) );
+	// call the member message handling routine
+	return pWnd->HandleMsg( hWnd,msg,wParam,lParam );
+}
+
+LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
 {
 	switch ( msg )
 	{
