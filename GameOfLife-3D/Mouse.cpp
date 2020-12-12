@@ -1,4 +1,5 @@
 #include "Mouse.h"
+#include "WinFlags.h"
 
 /*********** EVENT DEFINITIONS ***********/
 Mouse::Event::Event( Type type,const Mouse& parent )
@@ -125,6 +126,35 @@ void Mouse::OnRightReleased( int x,int y ) noexcept
     rightIsPressed = false;
 
     buffer.push( Event{ Event::Type::RRelease,*this } );
+    TrimBuffer();
+}
+
+void Mouse::OnWheelDelta( int x,int y,int delta ) noexcept
+{
+    deltaCarry += delta;
+    while ( deltaCarry >= WHEEL_DELTA )
+    {
+        deltaCarry -= WHEEL_DELTA;
+
+        OnWheelUp( x,y );
+    }
+    while ( deltaCarry <= -WHEEL_DELTA )
+    {
+        deltaCarry += WHEEL_DELTA;
+
+        OnWheelDown( x,y );
+    }
+}
+
+void Mouse::OnWheelUp( int x,int y ) noexcept
+{
+    buffer.push( Event{ Event::Type::WheelUp,*this } );
+    TrimBuffer();
+}
+
+void Mouse::OnWheelDown( int x,int y ) noexcept
+{
+    buffer.push( Event{ Event::Type::WheelDown,*this } );
     TrimBuffer();
 }
 

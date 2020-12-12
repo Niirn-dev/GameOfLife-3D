@@ -180,6 +180,12 @@ LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noex
 		mouse.OnMouseMove( pts.x,pts.y );
 	}
 		break;
+	case WM_MOUSEWHEEL:
+	{
+		const auto pts = MAKEPOINTS( lParam );
+		mouse.OnWheelDelta( pts.x,pts.y,GET_WHEEL_DELTA_WPARAM( wParam ) );
+	}
+		break;
 	/********* MOUSE EVENTS END *********/
 	}
 
