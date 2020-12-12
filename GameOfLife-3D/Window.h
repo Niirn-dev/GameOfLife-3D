@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 #include "NiiException.h"
+#include "Mouse.h"
 
 class Window
 {
@@ -52,6 +53,8 @@ private:
 	static LRESULT CALLBACK HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
 	LRESULT HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
 
+public:
+	Mouse mouse;
 private:
 	int width;
 	int height;

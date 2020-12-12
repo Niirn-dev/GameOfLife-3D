@@ -1,6 +1,7 @@
 #include "WinFlags.h"
 #include "Window.h"
 #include "NiiException.h"
+#include <sstream>
 
 int CALLBACK WinMain(
 	HINSTANCE	_In_		hInstance,
@@ -18,6 +19,18 @@ int CALLBACK WinMain(
 			if ( const auto ecode = w.ProcessMessages() )
 			{
 				return *ecode;
+			}
+
+			while ( !w.mouse.IsEmpty() )
+			{
+				const auto e = w.mouse.Read();
+				if ( e->GetType() == Mouse::Event::Type::Move )
+				{
+					const auto [mx,my] = e->GetPos();
+					std::stringstream oss;
+					oss << "Cursor position: (" << mx << "," << my << ")";
+					w.SetTitle( oss.str() );
+				}
 			}
 		}
 	}

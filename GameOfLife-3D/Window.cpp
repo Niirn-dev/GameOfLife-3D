@@ -93,7 +93,7 @@ Window::~Window()
 
 void Window::SetTitle( const std::string& title )
 {
-	if ( SetWindowText( hWnd,title.c_str() ) )
+	if ( SetWindowText( hWnd,title.c_str() ) == 0 )
 	{
 		throw WND_LAST_EXCEPT();
 	}
@@ -149,6 +149,38 @@ LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noex
 	case WM_CLOSE:
 		PostQuitMessage( 0 );
 		break;
+	/*********** MOUSE EVENTS ***********/
+	case WM_LBUTTONDOWN:
+	{
+		const auto pts = MAKEPOINTS( lParam );
+		mouse.OnLeftPressed( pts.x,pts.y );
+	}
+		break;
+	case WM_LBUTTONUP:
+	{
+		const auto pts = MAKEPOINTS( lParam );
+		mouse.OnLeftReleased( pts.x,pts.y );
+	}
+		break;
+	case WM_RBUTTONDOWN:
+	{
+		const auto pts = MAKEPOINTS( lParam );
+		mouse.OnRightPressed( pts.x,pts.y );
+	}
+		break;
+	case WM_RBUTTONUP:
+	{
+		const auto pts = MAKEPOINTS( lParam );
+		mouse.OnRightReleased( pts.x,pts.y );
+	}
+		break;
+	case WM_MOUSEMOVE:
+	{
+		const auto pts = MAKEPOINTS( lParam );
+		mouse.OnMouseMove( pts.x,pts.y );
+	}
+		break;
+	/********* MOUSE EVENTS END *********/
 	}
 
 	return DefWindowProc( hWnd,msg,wParam,lParam );

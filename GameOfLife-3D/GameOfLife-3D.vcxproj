@@ -163,11 +163,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NiiException.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="NiiException.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Window.h" />
