@@ -2,9 +2,28 @@
 #include "WinFlags.h"
 #include <optional>
 #include <string>
+#include "NiiException.h"
 
 class Window
 {
+private:
+	class Exception : public NiiException
+	{
+		using NiiException::NiiException;
+	public:
+		static std::string TranslateErrorCode( HRESULT hr ) noexcept;
+	};
+	class HrException : public Exception
+	{
+	public:
+		HrException( int line,const char* file,HRESULT hr );
+		const char* what() const noexcept override;
+		virtual const char* GetType() const noexcept override;
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorDescription() const noexcept;
+	private:
+		HRESULT hr;
+	};
 private:
 	class WindowClass
 	{

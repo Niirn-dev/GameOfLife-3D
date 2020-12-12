@@ -1,5 +1,7 @@
 #include "Window.h"
 #include <cassert>
+#include <sstream>
+#include "WindowThrowMacros.h"
 
 // WindowClass stuff
 Window::WindowClass Window::WindowClass::wndClass;
@@ -53,7 +55,7 @@ Window::Window( int width,int height,const char* name )
 	rect.bottom = rect.top + height;
 	if ( AdjustWindowRect( &rect,WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,FALSE ) == 0 )
 	{
-		assert( "Couldn't adjust window rect" && false );
+		throw WND_LAST_EXCEPT();
 	}
 
 	// create window & get hWnd
@@ -69,7 +71,7 @@ Window::Window( int width,int height,const char* name )
 	// check for error
 	if ( hWnd == nullptr )
 	{
-		assert( "Couldn't create window" && false );
+		throw WND_LAST_EXCEPT();
 	}
 	// newly created windows start off minimized
 	ShowWindow( hWnd,SW_SHOWDEFAULT );
@@ -84,7 +86,7 @@ void Window::SetTitle( const std::string& title )
 {
 	if ( SetWindowText( hWnd,title.c_str() ) )
 	{
-		assert( "Couldn't set window title" && false );
+		throw WND_LAST_EXCEPT();
 	}
 }
 
@@ -142,3 +144,60 @@ LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noex
 
 	return DefWindowProc( hWnd,msg,wParam,lParam );
 }
+
+/*********** EXCEPTION DEFINITIONS ***********/
+std::string Window::Exception::TranslateErrorCode( HRESULT hr ) noexcept
+{
+	char* pMsgBuf = nullptr;
+
+	const DWORD nMsgLen = FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr,hr,MAKELANGID( LANG_NEUTRAL,SUBLANG_DEFAULT ),
+		reinterpret_cast<LPSTR>( &pMsgBuf ),0,nullptr
+	);
+
+	if ( nMsgLen == 0 )
+	{
+		return "Unidentified error code";
+	}
+
+	std::string errorString = pMsgBuf;
+
+	LocalFree( pMsgBuf );
+
+	return errorString;
+}
+
+Window::HrException::HrException( int line,const char* file,HRESULT hr )
+	:
+	Exception( line,file ),
+	hr( hr )
+{}
+
+const char* Window::HrException::what() const noexcept
+{
+	std::stringstream oss;
+	oss << "[Type] " << GetType() << std::endl
+		<< "[Error Code] 0x" << std::hex << std::uppercase << GetErrorCode()
+		<< std::dec << " (" << (unsigned long)GetErrorCode() << ")" << std::endl
+		<< "[Description] " << GetErrorDescription()
+		<< GetOriginString();
+	whatBuffer = oss.str();
+	return whatBuffer.c_str();
+}
+
+const char* Window::HrException::GetType() const noexcept
+{
+	return "Niirn Window Exception";
+}
+
+HRESULT Window::HrException::GetErrorCode() const noexcept
+{
+	return hr;
+}
+
+std::string Window::HrException::GetErrorDescription() const noexcept
+{
+	return Exception::TranslateErrorCode( hr );
+}
+/********* EXCEPTION DEFINITIONS END *********/

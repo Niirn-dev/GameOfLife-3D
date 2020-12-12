@@ -163,11 +163,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="NiiException.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NiiException.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WindowThrowMacros.h" />
     <ClInclude Include="WinFlags.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
