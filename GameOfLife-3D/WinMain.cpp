@@ -23,22 +23,12 @@ int CALLBACK WinMain(
 
 			while ( !w.mouse.IsEmpty() )
 			{
-				static int wheelClickCount = 0;
 				const auto e = w.mouse.Read();
-				if ( e->GetType() == Mouse::Event::Type::WheelUp )
+				if ( e->GetType() == Mouse::Event::Type::Move )
 				{
 					const auto [mx,my] = e->GetPos();
 					std::stringstream oss;
-					oss << "Wheel up: " << ++wheelClickCount
-						<< " | Cursor position: (" << mx << "," << my << ")";
-					w.SetTitle( oss.str() );
-				}
-				if ( e->GetType() == Mouse::Event::Type::WheelDown )
-				{
-					const auto [mx,my] = e->GetPos();
-					std::stringstream oss;
-					oss << "Wheel down: " << --wheelClickCount
-						<< " | Cursor position: (" << mx << "," << my << ")";
+					oss << "Cursor position: (" << mx << "," << my << ")";
 					w.SetTitle( oss.str() );
 				}
 			}

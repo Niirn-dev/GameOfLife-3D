@@ -115,6 +115,42 @@ std::optional<int> Window::ProcessMessages() noexcept
 	return {};
 }
 
+void Window::ShowCursor() const noexcept
+{
+	while ( ::ShowCursor( TRUE ) < 0 );
+}
+
+void Window::HideCursor() const noexcept
+{
+	while ( ::ShowCursor( FALSE ) >= 0 );
+}
+
+void Window::ConfineCursor() const
+{
+	RECT cr;
+	if ( GetClientRect( hWnd,&cr ) == 0 )
+	{
+		throw WND_LAST_EXCEPT();
+	}
+	if ( MapWindowPoints( hWnd,HWND_DESKTOP,reinterpret_cast<LPPOINT>( &cr ),2 ) == 0 )
+	{
+		throw WND_LAST_EXCEPT();
+	}
+
+	if ( ClipCursor( &cr ) == 0 )
+	{
+		throw WND_LAST_EXCEPT();
+	}
+}
+
+void Window::FreeCursor() const
+{
+	if ( ClipCursor( nullptr ) == 0 )
+	{
+		throw WND_LAST_EXCEPT();
+	}
+}
+
 LRESULT CALLBACK Window::HandleMsgSetup( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
 {
 	if ( msg == WM_NCCREATE )
@@ -148,6 +184,18 @@ LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noex
 	{
 	case WM_CLOSE:
 		PostQuitMessage( 0 );
+		break;
+	case WM_ACTIVATE:
+		if ( wParam & ( WA_ACTIVE | WA_CLICKACTIVE ) )
+		{
+			HideCursor();
+			ConfineCursor();
+		}
+		else
+		{
+			ShowCursor();
+			FreeCursor();
+		}
 		break;
 	/*********** MOUSE EVENTS ***********/
 	case WM_LBUTTONDOWN:
