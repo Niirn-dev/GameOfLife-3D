@@ -2,6 +2,7 @@
 #include <cassert>
 #include <sstream>
 #include "WindowThrowMacros.h"
+#include "resource.h"
 
 // WindowClass stuff
 Window::WindowClass Window::WindowClass::wndClass;
@@ -27,12 +28,20 @@ Window::WindowClass::WindowClass() noexcept
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetInstance();
-	wc.hIcon = nullptr;
+	wc.hIcon = static_cast<HICON>( LoadImage( 
+		GetInstance(),
+		MAKEINTRESOURCE( ICON_MAIN ),
+		IMAGE_ICON,64,64,0
+	) );
 	wc.hCursor = nullptr;
 	wc.hbrBackground = nullptr;
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = GetName();
-	wc.hIconSm = nullptr;
+	wc.hIconSm = static_cast<HICON>( LoadImage(
+		GetInstance(),
+		MAKEINTRESOURCE( ICON_MAIN ),
+		IMAGE_ICON,64,64,0
+	) );
 	RegisterClassEx( &wc );
 }
 
