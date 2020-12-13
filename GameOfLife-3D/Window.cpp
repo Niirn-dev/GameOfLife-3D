@@ -84,6 +84,8 @@ Window::Window( int width,int height,const char* name )
 	}
 	// newly created windows start off minimized
 	ShowWindow( hWnd,SW_SHOWDEFAULT );
+	// initialize graphics
+	pGfx = std::make_unique<Graphics>( hWnd,width,height );
 }
 
 Window::~Window()
@@ -149,6 +151,11 @@ void Window::FreeCursor() const
 	{
 		throw WND_LAST_EXCEPT();
 	}
+}
+
+Graphics& Window::Gfx()
+{
+	return *pGfx;
 }
 
 LRESULT CALLBACK Window::HandleMsgSetup( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept

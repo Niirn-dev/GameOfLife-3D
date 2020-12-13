@@ -14,7 +14,9 @@ int App::Go()
 			return *ecode;
 		}
 
+		wnd.Gfx().BeginFrame( 0.12f,0.0f,0.08f );
 		DoFrame();
+		wnd.Gfx().EndFrame();
 	}
 }
 

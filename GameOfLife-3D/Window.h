@@ -5,6 +5,8 @@
 #include "NiiException.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+#include "Graphics.h"
+#include <memory>
 
 class Window
 {
@@ -62,8 +64,10 @@ private:
 public:
 	Mouse mouse;
 	Keyboard kbd;
+	Graphics& Gfx();
 private:
 	int width;
 	int height;
 	HWND hWnd;
+	std::unique_ptr<Graphics> pGfx;
 };
