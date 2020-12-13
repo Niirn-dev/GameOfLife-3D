@@ -4,6 +4,7 @@
 #include <string>
 #include "NiiException.h"
 #include "Mouse.h"
+#include "Keyboard.h"
 
 class Window
 {
@@ -60,6 +61,7 @@ private:
 
 public:
 	Mouse mouse;
+	Keyboard kbd;
 private:
 	int width;
 	int height;

@@ -235,6 +235,24 @@ LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noex
 	}
 		break;
 	/********* MOUSE EVENTS END *********/
+	/*********** KEYBOARD EVENTS ***********/
+	case WM_SYSKEYDOWN:
+		[[fallthrough]];
+	case WM_KEYDOWN:
+		if ( !(lParam & ( 1u << 30 )) || kbd.IsAutorepeatEnabled() )
+		{
+			kbd.OnKeyPressed( static_cast<unsigned char>( wParam ) );
+		}
+		break;
+	case WM_SYSKEYUP:
+		[[fallthrough]];
+	case WM_KEYUP:
+		kbd.OnKeyReleased( static_cast<unsigned char>( wParam ) );
+		break;
+	case WM_CHAR:
+		kbd.OnChar( static_cast<char>( wParam ) );
+		break;
+	/********* KEYBOARD EVENTS END *********/
 	}
 
 	return DefWindowProc( hWnd,msg,wParam,lParam );

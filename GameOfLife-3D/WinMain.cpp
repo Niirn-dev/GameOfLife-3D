@@ -13,6 +13,7 @@ int CALLBACK WinMain(
 	try
 	{
 		Window w{ 800,600,"Game of Life" };
+		std::string title = "";
 
 		while ( true )
 		{
@@ -21,16 +22,26 @@ int CALLBACK WinMain(
 				return *ecode;
 			}
 
-			while ( !w.mouse.IsEmpty() )
+			while ( !w.kbd.IsKeyEmpty() )
 			{
-				const auto e = w.mouse.Read();
-				if ( e->GetType() == Mouse::Event::Type::Move )
+				const auto e = w.kbd.ReadKey();
+				if ( e->IsPress() && e->GetCode() == VK_BACK )
 				{
-					const auto [mx,my] = e->GetPos();
-					std::stringstream oss;
-					oss << "Cursor position: (" << mx << "," << my << ")";
-					w.SetTitle( oss.str() );
+					if ( !title.empty() )
+					{
+						title.pop_back();
+					}
 				}
+			}
+
+			while ( !w.kbd.IsCharEmpty() )
+			{
+				if ( const auto c = *w.kbd.ReadChar(); c >= ' ' && c <= '}' )
+				{
+					title += c;
+				}
+
+				w.SetTitle( title );
 			}
 		}
 	}
