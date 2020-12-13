@@ -14,5 +14,4 @@ private:
 
 private:
 	Window wnd;
-	std::string title = "";
 };

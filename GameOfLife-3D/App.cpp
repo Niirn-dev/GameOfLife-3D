@@ -25,22 +25,9 @@ void App::DoFrame()
 	while ( !wnd.kbd.IsKeyEmpty() )
 	{
 		const auto e = wnd.kbd.ReadKey();
-		if ( e->IsPress() && e->GetCode() == VK_BACK )
+		if ( e->IsPress() && e->GetCode() == 'I' )
 		{
-			if ( !title.empty() )
-			{
-				title.pop_back();
-			}
+			wnd.ToggleCursorCapture();
 		}
-	}
-
-	while ( !wnd.kbd.IsCharEmpty() )
-	{
-		if ( const auto c = *wnd.kbd.ReadChar(); c >= ' ' && c <= '}' )
-		{
-			title += c;
-		}
-
-		wnd.SetTitle( title );
 	}
 }

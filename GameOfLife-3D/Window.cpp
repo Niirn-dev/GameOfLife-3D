@@ -153,6 +153,22 @@ void Window::FreeCursor() const
 	}
 }
 
+void Window::ToggleCursorCapture() noexcept
+{
+	cursorCaptureEnabled = !cursorCaptureEnabled;
+
+	if ( cursorCaptureEnabled )
+	{
+		HideCursor();
+		ConfineCursor();
+	}
+	else
+	{
+		ShowCursor();
+		FreeCursor();
+	}
+}
+
 Graphics& Window::Gfx()
 {
 	return *pGfx;
@@ -193,7 +209,7 @@ LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noex
 		PostQuitMessage( 0 );
 		break;
 	case WM_ACTIVATE:
-		if ( wParam & ( WA_ACTIVE | WA_CLICKACTIVE ) )
+		if ( cursorCaptureEnabled && ( wParam & ( WA_ACTIVE | WA_CLICKACTIVE ) ) )
 		{
 			HideCursor();
 			ConfineCursor();

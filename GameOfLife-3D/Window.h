@@ -51,11 +51,15 @@ public:
 
 	void SetTitle( const std::string& title );
 	std::optional<int> ProcessMessages() noexcept;
-
+private:
 	void ShowCursor() const noexcept;
 	void HideCursor() const noexcept;
 	void ConfineCursor() const;
 	void FreeCursor() const;
+public:
+	void ToggleCursorCapture() noexcept;
+private:
+	bool cursorCaptureEnabled = false;
 private:
 	static LRESULT CALLBACK HandleMsgSetup( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
