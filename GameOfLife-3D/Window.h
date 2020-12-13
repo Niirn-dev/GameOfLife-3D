@@ -10,7 +10,7 @@
 
 class Window
 {
-private:
+public:
 	class Exception : public NiiException
 	{
 		using NiiException::NiiException;
