@@ -1,7 +1,6 @@
 #include "WinFlags.h"
-#include "Window.h"
+#include "App.h"
 #include "NiiException.h"
-#include <sstream>
 
 int CALLBACK WinMain(
 	HINSTANCE	_In_		hInstance,
@@ -12,38 +11,7 @@ int CALLBACK WinMain(
 {
 	try
 	{
-		Window w{ 800,600,"Game of Life" };
-		std::string title = "";
-
-		while ( true )
-		{
-			if ( const auto ecode = w.ProcessMessages() )
-			{
-				return *ecode;
-			}
-
-			while ( !w.kbd.IsKeyEmpty() )
-			{
-				const auto e = w.kbd.ReadKey();
-				if ( e->IsPress() && e->GetCode() == VK_BACK )
-				{
-					if ( !title.empty() )
-					{
-						title.pop_back();
-					}
-				}
-			}
-
-			while ( !w.kbd.IsCharEmpty() )
-			{
-				if ( const auto c = *w.kbd.ReadChar(); c >= ' ' && c <= '}' )
-				{
-					title += c;
-				}
-
-				w.SetTitle( title );
-			}
-		}
+		return App{}.Go();
 	}
 	catch ( const NiiException& e )
 	{
