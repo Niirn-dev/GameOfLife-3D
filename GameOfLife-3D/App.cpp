@@ -30,4 +30,6 @@ void App::DoFrame()
 			wnd.ToggleCursorCapture();
 		}
 	}
+
+	wnd.Gfx().DrawTriangle();
 }

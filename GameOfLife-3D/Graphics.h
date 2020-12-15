@@ -52,6 +52,8 @@ public:
 	void BeginFrame( float r,float g,float b ) noexcept;
 	void EndFrame();
 
+	void DrawTriangle();
+
 private:
 	int width;
 	int height;

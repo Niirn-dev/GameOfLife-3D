@@ -4,8 +4,11 @@
 #include <sstream>
 #include <assert.h>
 #include "GraphicsThrowMacros.h"
+#include <DirectXMath.h>
+#include <d3dcompiler.h>
 
 #pragma comment( lib,"d3d11.lib" )
+#pragma comment( lib,"D3DCompiler.lib" )
 
 namespace wrl = Microsoft::WRL;
 
@@ -65,6 +68,8 @@ Graphics::Graphics( HWND hWnd,int width,int height )
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
 	pContext->RSSetViewports( 1u,&vp );
+
+	GFX_THROW_INFO_ONLY( pContext->OMSetRenderTargets( 1u,pTarget.GetAddressOf(),nullptr ) );
 }
 
 void Graphics::BeginFrame( float r,float g,float b ) noexcept
@@ -91,6 +96,84 @@ void Graphics::EndFrame()
 			throw GFX_EXCEPT( hr );
 		}
 	}
+}
+
+void Graphics::DrawTriangle()
+{
+	namespace dx = DirectX;
+	namespace wrl = Microsoft::WRL;
+	HRESULT hr;
+
+	std::vector<dx::XMFLOAT3> vertices;
+	vertices.reserve( 3 );
+	vertices.push_back( { 0.0f,0.5f,0.5f } );
+	vertices.push_back( { 0.5f,-0.5f,0.5f } );
+	vertices.push_back( { -0.5f,-0.5f,0.5f } );
+
+	GFX_THROW_INFO_ONLY( pContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
+	D3D11_BUFFER_DESC bufDesc = {};
+	bufDesc.ByteWidth = UINT( vertices.size() * sizeof( dx::XMFLOAT3 ) );
+	bufDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufDesc.CPUAccessFlags = 0u;
+	bufDesc.MiscFlags = 0u;
+	bufDesc.StructureByteStride = sizeof( dx::XMFLOAT3 );
+	D3D11_SUBRESOURCE_DATA srd = {};
+	srd.pSysMem = vertices.data();
+
+	GFX_THROW_INFO( pDevice->CreateBuffer( &bufDesc,&srd,&pVertexBuffer ) );
+	UINT stride = sizeof( dx::XMFLOAT3 );
+	UINT offset = 0u;
+	GFX_THROW_INFO_ONLY( pContext->IASetVertexBuffers( 0u,1u,pVertexBuffer.GetAddressOf(),&stride,&offset ) );
+
+	wrl::ComPtr<ID3DBlob> pBlob;
+	GFX_THROW_INFO( D3DReadFileToBlob( L"VertexShader.cso",&pBlob ) );
+
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+	GFX_THROW_INFO( pDevice->CreateVertexShader( pBlob->GetBufferPointer(),pBlob->GetBufferSize(),nullptr,&pVertexShader ) );
+	GFX_THROW_INFO_ONLY( pContext->VSSetShader( pVertexShader.Get(),nullptr,0u ) );
+
+	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
+	D3D11_INPUT_ELEMENT_DESC ieDesc[] = {
+		{ "Position",0u,DXGI_FORMAT_R32G32B32_FLOAT,0u,0u,D3D11_INPUT_PER_VERTEX_DATA,0u }
+	};
+	GFX_THROW_INFO( pDevice->CreateInputLayout(
+		ieDesc,
+		1u,
+		pBlob->GetBufferPointer(),
+		pBlob->GetBufferSize(),
+		&pInputLayout
+	) );
+	GFX_THROW_INFO_ONLY( pContext->IASetInputLayout( pInputLayout.Get() ) );
+
+	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
+	GFX_THROW_INFO( D3DReadFileToBlob( L"PixelShader.cso",&pBlob ) );
+	GFX_THROW_INFO( pDevice->CreatePixelShader( pBlob->GetBufferPointer(),pBlob->GetBufferSize(),nullptr,&pPixelShader ) );
+	GFX_THROW_INFO_ONLY( pContext->PSSetShader( pPixelShader.Get(),nullptr,0u ) );
+
+
+	std::vector<unsigned short> indices;
+	indices.reserve( 3 );
+	indices.emplace_back( 0 );
+	indices.emplace_back( 1 );
+	indices.emplace_back( 2 );
+
+	wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
+	bufDesc.ByteWidth = UINT( indices.size() * sizeof( unsigned short ) );
+	bufDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bufDesc.CPUAccessFlags = 0u;
+	bufDesc.MiscFlags = 0u;
+	bufDesc.StructureByteStride = sizeof( unsigned short );
+
+	srd.pSysMem = indices.data();
+
+	GFX_THROW_INFO( pDevice->CreateBuffer( &bufDesc,&srd,&pIndexBuffer ) );
+	GFX_THROW_INFO_ONLY( pContext->IASetIndexBuffer( pIndexBuffer.Get(),DXGI_FORMAT_R16_UINT,0u ) );
+
+	GFX_THROW_INFO_ONLY( pContext->DrawIndexed( (UINT)indices.size(),0u,0u ) );
 }
 
 /*********** EXCEPTION DEFINITIONS ***********/
