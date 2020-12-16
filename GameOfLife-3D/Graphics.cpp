@@ -213,7 +213,7 @@ const char* Graphics::HrException::what() const noexcept
 
 const char* Graphics::HrException::GetType() const noexcept
 {
-	return "Niirn Graphics Exception";
+	return "Graphics Exception";
 }
 
 HRESULT Graphics::HrException::GetErrorCode() const noexcept
@@ -267,7 +267,7 @@ const char* Graphics::InfoException::what() const noexcept
 
 const char* Graphics::InfoException::GetType() const noexcept
 {
-	return "Niirn Graphics Info Exception";
+	return "Graphics Info Exception";
 }
 
 std::string Graphics::InfoException::GetErrorInfo() const noexcept
@@ -277,6 +277,6 @@ std::string Graphics::InfoException::GetErrorInfo() const noexcept
 
 const char* Graphics::DeviceRemovedException::GetType() const noexcept
 {
-	return "Niirn Graphics Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
+	return "Graphics Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
 }
 /********* EXCEPTION DEFINITIONS END *********/

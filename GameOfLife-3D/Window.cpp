@@ -324,7 +324,7 @@ const char* Window::HrException::what() const noexcept
 
 const char* Window::HrException::GetType() const noexcept
 {
-	return "Niirn Window Exception";
+	return "Window Exception";
 }
 
 HRESULT Window::HrException::GetErrorCode() const noexcept
