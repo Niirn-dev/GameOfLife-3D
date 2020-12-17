@@ -7,6 +7,7 @@
 
 class Graphics
 {
+	friend class Bindable;
 public:
 	class Exception : public NiiException
 	{
@@ -52,7 +53,7 @@ public:
 	void BeginFrame( float r,float g,float b ) noexcept;
 	void EndFrame();
 
-	void DrawTriangle();
+	void DrawIndexed( UINT count ) noexcept( !IS_DEBUG );
 
 private:
 	int width;

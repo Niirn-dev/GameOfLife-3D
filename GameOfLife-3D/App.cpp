@@ -2,7 +2,8 @@
 
 App::App()
 	:
-	wnd( 800,600,"Game of Life" )
+	wnd( 800,600,"Game of Life" ),
+	triangle( wnd.Gfx() )
 {}
 
 int App::Go()
@@ -31,5 +32,5 @@ void App::DoFrame()
 		}
 	}
 
-	wnd.Gfx().DrawTriangle();
+	triangle.Draw( wnd.Gfx() );
 }
