@@ -87,6 +87,9 @@
     <ClCompile Include="TestTriangle.cpp">
       <Filter>Source Files\Drawables</Filter>
     </ClCompile>
+    <ClCompile Include="TransformCBuf.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffers.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformCBuf.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
   </ItemGroup>

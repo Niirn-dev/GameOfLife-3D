@@ -4,11 +4,13 @@
 #include <memory>
 #include <type_traits>
 #include "Bindable.h"
+#include <DirectXMath.h>
 
 class Drawable
 {
 public:
 	void Draw( class Graphics& gfx) noexcept( !IS_DEBUG );
+	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 protected:
 	void AddBind( std::unique_ptr<Bindable> bind ) noexcept;
 

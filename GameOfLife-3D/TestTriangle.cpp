@@ -37,4 +37,23 @@ TestTriangle::TestTriangle( Graphics& gfx )
 		DirectX::XMFLOAT4 c = { 0.6f,0.6f,0.9f,1.0f };
 	} psCBuf;
 	AddBind( std::make_unique<PixelConstantBuffer<PSConstBuffer>>( gfx,psCBuf ) );
+
+	AddBind( std::make_unique<TransformCBuf>( gfx,*this ) );
+}
+
+void TestTriangle::Update( DirectX::XMFLOAT3 dPos ) noexcept
+{
+	namespace dx = DirectX;
+	dx::XMStoreFloat3(
+		&pos,
+		dx::XMVectorAdd(
+			dx::XMLoadFloat3( &pos ),
+			dx::XMLoadFloat3( &dPos )
+		)
+	);
+}
+
+DirectX::XMMATRIX TestTriangle::GetTransformXM() const noexcept
+{
+	return DirectX::XMMatrixTranslation( pos.x,pos.y,pos.z );
 }
