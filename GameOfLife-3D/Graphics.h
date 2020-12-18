@@ -2,6 +2,7 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <vector>
+#include <DirectXMath.h>
 #include "NiiException.h"
 #include "DxgiInfoManager.h"
 
@@ -54,6 +55,11 @@ public:
 	void EndFrame();
 
 	void DrawIndexed( UINT count ) noexcept( !IS_DEBUG );
+
+	void SetProjection( DirectX::FXMMATRIX proj ) noexcept;
+	DirectX::XMMATRIX GetProjection() const noexcept;
+private:
+	DirectX::XMMATRIX projection = DirectX::XMMatrixIdentity();
 
 private:
 	int width;

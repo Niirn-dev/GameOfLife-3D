@@ -5,9 +5,9 @@ TestTriangle::TestTriangle( Graphics& gfx )
 {
 	std::vector<DirectX::XMFLOAT3> vertices;
 	vertices.reserve( 3 );
-	vertices.push_back( { 0.0f,0.5f,0.5f } );
-	vertices.push_back( { 0.5f,-0.5f,0.5f } );
-	vertices.push_back( { -0.5f,-0.5f,0.5f } );
+	vertices.push_back( { 0.0f,0.5f,2.5f } );
+	vertices.push_back( { 0.5f,-0.5f,2.5f } );
+	vertices.push_back( { -0.5f,-0.5f,2.5f } );
 
 	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 

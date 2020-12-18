@@ -7,14 +7,17 @@
 
 class TransformCBuf : public Bindable
 {
+	struct Transforms
+	{
+		DirectX::XMMATRIX worldProj = DirectX::XMMatrixIdentity();
+	};
 public:
 	TransformCBuf( Graphics& gfx,const class Drawable& parent  );
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override;
 private:
+	Transforms GetTransforms( Graphics& gfx ) const noexcept;
+	void UpdateBindImpl( Graphics& gfx,const Transforms& tfs ) noexcept( !IS_DEBUG );
+private:
 	const Drawable& parent;
-	struct Transforms
-	{
-		DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
-	} tf;
 	std::unique_ptr<VertexConstantBuffer<Transforms>> pTransformBuffer;
 };

@@ -11,7 +11,16 @@ TransformCBuf::TransformCBuf( Graphics& gfx,const Drawable& parent )
 
 void TransformCBuf::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 {
-	tf.world = parent.GetTransformXM();
-	pTransformBuffer->Update( gfx,tf );
+	UpdateBindImpl( gfx,GetTransforms( gfx ) );
+}
+
+TransformCBuf::Transforms TransformCBuf::GetTransforms( Graphics& gfx ) const noexcept
+{
+	return { DirectX::XMMatrixTranspose( parent.GetTransformXM() * gfx.GetProjection() ) };
+}
+
+void TransformCBuf::UpdateBindImpl( Graphics& gfx,const Transforms& tfs ) noexcept( !IS_DEBUG )
+{
+	pTransformBuffer->Update( gfx,tfs );
 	pTransformBuffer->Bind( gfx );
 }

@@ -2,9 +2,8 @@
 #include "dxerr.h"
 #include <ios>
 #include <sstream>
-#include <assert.h>
+#include <cassert>
 #include "GraphicsThrowMacros.h"
-#include <DirectXMath.h>
 #include <d3dcompiler.h>
 
 #pragma comment( lib,"d3d11.lib" )
@@ -101,6 +100,16 @@ void Graphics::EndFrame()
 void Graphics::DrawIndexed( UINT count ) noexcept( !IS_DEBUG )
 {
 	GFX_THROW_INFO_ONLY( pContext->DrawIndexed( count,0u,0u ) );
+}
+
+void Graphics::SetProjection( DirectX::FXMMATRIX proj ) noexcept
+{
+	projection = proj;
+}
+
+DirectX::XMMATRIX Graphics::GetProjection() const noexcept
+{
+	return projection;
 }
 
 /*********** EXCEPTION DEFINITIONS ***********/
