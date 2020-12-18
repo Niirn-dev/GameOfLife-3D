@@ -186,6 +186,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="BindableCommon.h" />
+    <ClInclude Include="ConstantBuffers.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="dxerr.h" />
     <ClInclude Include="DxgiInfoManager.h" />

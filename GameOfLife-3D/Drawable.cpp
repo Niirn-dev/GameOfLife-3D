@@ -4,6 +4,7 @@
 
 void Drawable::Draw( Graphics& gfx ) noexcept( !IS_DEBUG )
 {
+	assert( pIndexBuffer != nullptr && "Must have an index buffer pointer filled" );
 	for ( auto& b : bindPtrs )
 	{
 		b->Bind( gfx );

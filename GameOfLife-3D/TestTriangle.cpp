@@ -31,4 +31,10 @@ TestTriangle::TestTriangle( Graphics& gfx )
 	indices.emplace_back( 2 );
 
 	AddBind( std::make_unique<IndexBuffer>( gfx,indices ) );
+
+	struct PSConstBuffer
+	{
+		DirectX::XMFLOAT4 c = { 0.6f,0.6f,0.9f,1.0f };
+	} psCBuf;
+	AddBind( std::make_unique<PixelConstantBuffer<PSConstBuffer>>( gfx,psCBuf ) );
 }
