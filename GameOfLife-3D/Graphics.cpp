@@ -112,6 +112,11 @@ DirectX::XMMATRIX Graphics::GetProjection() const noexcept
 	return projection;
 }
 
+float Graphics::GetAspectRatio() const noexcept
+{
+	return (float)height / (float)width;
+}
+
 /*********** EXCEPTION DEFINITIONS ***********/
 Graphics::HrException::HrException( int line,const char* file,HRESULT hr,std::vector<std::string> infoMsgs ) noexcept
 	:

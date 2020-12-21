@@ -5,7 +5,7 @@ App::App()
 	wnd( 800,600,"Game of Life" ),
 	sphere( wnd.Gfx() )
 {
-	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,3.0f / 4.0f,0.5f,40.0f ) );
+	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,wnd.Gfx().GetAspectRatio(),0.5f,40.0f ) );
 }
 
 int App::Go()

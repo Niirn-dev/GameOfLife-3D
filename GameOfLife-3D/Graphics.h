@@ -61,6 +61,8 @@ public:
 private:
 	DirectX::XMMATRIX projection = DirectX::XMMatrixIdentity();
 
+public:
+	float GetAspectRatio() const noexcept;
 private:
 	int width;
 	int height;
