@@ -9,7 +9,7 @@ public:
 	void Update( float dt ) noexcept;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 private:
-	DirectX::XMFLOAT3 pos = { 0.0f,0.0f,2.0f };
+	DirectX::XMFLOAT3 pos = { 0.0f,0.0f,10.0f };
 	float pitch = 0.0f;
 	float yaw = 0.0f;
 	float roll = 0.0f;

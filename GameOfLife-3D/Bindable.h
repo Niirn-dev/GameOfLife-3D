@@ -4,6 +4,7 @@
 class Bindable
 {
 public:
+	virtual ~Bindable() = default;
 	virtual void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) = 0;
 
 protected:
