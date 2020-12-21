@@ -145,6 +145,16 @@ DirectX::XMMATRIX Graphics::GetProjection() const noexcept
 	return projection;
 }
 
+void Graphics::SetCamera( DirectX::FXMMATRIX camTransform ) noexcept
+{
+	camera = camTransform;
+}
+
+DirectX::XMMATRIX Graphics::GetCamera() const noexcept
+{
+	return camera;
+}
+
 float Graphics::GetAspectRatio() const noexcept
 {
 	return (float)height / (float)width;

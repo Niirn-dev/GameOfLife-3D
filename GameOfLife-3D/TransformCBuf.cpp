@@ -16,7 +16,11 @@ void TransformCBuf::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 
 TransformCBuf::Transforms TransformCBuf::GetTransforms( Graphics& gfx ) const noexcept
 {
-	return { DirectX::XMMatrixTranspose( parent.GetTransformXM() * gfx.GetProjection() ) };
+	return { DirectX::XMMatrixTranspose( 
+		parent.GetTransformXM() * 
+		gfx.GetCamera() * 
+		gfx.GetProjection() 
+	) };
 }
 
 void TransformCBuf::UpdateBindImpl( Graphics& gfx,const Transforms& tfs ) noexcept( !IS_DEBUG )

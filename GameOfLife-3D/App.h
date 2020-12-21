@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.h"
+#include "Camera.h"
 #include "TestSphere.h"
 
 class App
@@ -15,5 +16,6 @@ private:
 
 private:
 	Window wnd;
+	Camera cam;
 	TestSphere sphere;
 };

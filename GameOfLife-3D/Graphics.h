@@ -58,8 +58,11 @@ public:
 
 	void SetProjection( DirectX::FXMMATRIX proj ) noexcept;
 	DirectX::XMMATRIX GetProjection() const noexcept;
+	void SetCamera( DirectX::FXMMATRIX camTransform ) noexcept;
+	DirectX::XMMATRIX GetCamera() const noexcept;
 private:
 	DirectX::XMMATRIX projection = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX camera = DirectX::XMMatrixIdentity();
 
 public:
 	float GetAspectRatio() const noexcept;

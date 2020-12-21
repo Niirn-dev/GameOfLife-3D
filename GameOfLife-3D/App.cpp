@@ -34,6 +34,8 @@ void App::DoFrame()
 		}
 	}
 
+	wnd.Gfx().SetCamera( cam.GetMatrix() );
+
 	sphere.Update( 1.0f / 60.0f );
 
 	sphere.Draw( wnd.Gfx() );
