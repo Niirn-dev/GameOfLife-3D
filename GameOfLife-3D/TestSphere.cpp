@@ -23,19 +23,6 @@ TestSphere::TestSphere( Graphics& gfx )
 
 	AddBind( std::make_unique<IndexBuffer>( gfx,mesh.indices ) );
 
-	struct PSConstBuffer
-	{
-		DirectX::XMFLOAT4 c[6] = {
-			{ 1.0f,0.0f,0.0f,1.0f },
-			{ 0.0f,1.0f,0.0f,1.0f },
-			{ 0.0f,0.0f,1.0f,1.0f },
-			{ 1.0f,0.0f,1.0f,1.0f },
-			{ 0.6f,1.0f,1.0f,1.0f },
-			{ 1.0f,1.0f,1.0f,1.0f },
-		};
-	} psCBuf;
-	AddBind( std::make_unique<PixelConstantBuffer<PSConstBuffer>>( gfx,psCBuf ) );
-
 	AddBind( std::make_unique<TransformCBuf>( gfx,*this ) );
 }
 
