@@ -170,12 +170,13 @@
     <ClCompile Include="DxgiInfoManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="IndexedTriangleList.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NiiException.cpp" />
     <ClCompile Include="PixelShader.cpp" />
-    <ClCompile Include="TestTriangle.cpp" />
+    <ClCompile Include="TestSphere.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformCBuf.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
@@ -194,13 +195,16 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="GraphicsThrowMacros.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="IndexedTriangleList.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="NiiException.h" />
+    <ClInclude Include="NiiMath.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="TestTriangle.h" />
+    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="TestSphere.h" />
     <ClInclude Include="Topology.h" />
     <ClInclude Include="TransformCBuf.h" />
     <ClInclude Include="VertexBuffer.h" />
@@ -225,6 +229,7 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

@@ -1,6 +1,6 @@
 #pragma once
 #include "Window.h"
-#include "TestTriangle.h"
+#include "TestSphere.h"
 
 class App
 {
@@ -15,5 +15,5 @@ private:
 
 private:
 	Window wnd;
-	TestTriangle triangle;
+	TestSphere sphere;
 };

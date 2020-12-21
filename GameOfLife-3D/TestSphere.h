@@ -2,12 +2,12 @@
 
 #include "Drawable.h"
 
-class TestTriangle : public Drawable
+class TestSphere : public Drawable
 {
 public:
-	TestTriangle( Graphics& gfx );
+	TestSphere( Graphics& gfx );
 	void Update( DirectX::XMFLOAT3 dPos ) noexcept;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 private:
-	DirectX::XMFLOAT3 pos = {};
+	DirectX::XMFLOAT3 pos = { 0.0f,0.0f,2.0f };
 };

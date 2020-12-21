@@ -1,17 +1,14 @@
-#include "TestTriangle.h"
+#include "TestSphere.h"
 #include "BindableCommon.h"
+#include "Sphere.h"
 
-TestTriangle::TestTriangle( Graphics& gfx )
+TestSphere::TestSphere( Graphics& gfx )
 {
-	std::vector<DirectX::XMFLOAT3> vertices;
-	vertices.reserve( 3 );
-	vertices.push_back( { 0.0f,0.5f,2.5f } );
-	vertices.push_back( { 0.5f,-0.5f,2.5f } );
-	vertices.push_back( { -0.5f,-0.5f,2.5f } );
+	const auto mesh = Sphere::MakeIcosahedral();
 
 	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
-	AddBind( std::make_unique<VertexBuffer>( gfx,vertices ) );
+	AddBind( std::make_unique<VertexBuffer>( gfx,mesh.vertices ) );
 
 	auto pvs = std::make_unique<VertexShader>( gfx,L"VertexShader.cso" );
 	auto pvsb = pvs->GetBlob();
@@ -24,24 +21,25 @@ TestTriangle::TestTriangle( Graphics& gfx )
 
 	AddBind( std::make_unique<PixelShader>( gfx,L"PixelShader.cso" ) );
 
-	std::vector<unsigned short> indices;
-	indices.reserve( 3 );
-	indices.emplace_back( 0 );
-	indices.emplace_back( 1 );
-	indices.emplace_back( 2 );
-
-	AddBind( std::make_unique<IndexBuffer>( gfx,indices ) );
+	AddBind( std::make_unique<IndexBuffer>( gfx,mesh.indices ) );
 
 	struct PSConstBuffer
 	{
-		DirectX::XMFLOAT4 c = { 0.6f,0.6f,0.9f,1.0f };
+		DirectX::XMFLOAT4 c[6] = {
+			{ 1.0f,0.0f,0.0f,1.0f },
+			{ 0.0f,1.0f,0.0f,1.0f },
+			{ 0.0f,0.0f,1.0f,1.0f },
+			{ 1.0f,0.0f,1.0f,1.0f },
+			{ 0.6f,1.0f,1.0f,1.0f },
+			{ 1.0f,1.0f,1.0f,1.0f },
+		};
 	} psCBuf;
 	AddBind( std::make_unique<PixelConstantBuffer<PSConstBuffer>>( gfx,psCBuf ) );
 
 	AddBind( std::make_unique<TransformCBuf>( gfx,*this ) );
 }
 
-void TestTriangle::Update( DirectX::XMFLOAT3 dPos ) noexcept
+void TestSphere::Update( DirectX::XMFLOAT3 dPos ) noexcept
 {
 	namespace dx = DirectX;
 	dx::XMStoreFloat3(
@@ -53,7 +51,7 @@ void TestTriangle::Update( DirectX::XMFLOAT3 dPos ) noexcept
 	);
 }
 
-DirectX::XMMATRIX TestTriangle::GetTransformXM() const noexcept
+DirectX::XMMATRIX TestSphere::GetTransformXM() const noexcept
 {
 	return DirectX::XMMatrixTranslation( pos.x,pos.y,pos.z );
 }

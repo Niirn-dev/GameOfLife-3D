@@ -3,7 +3,7 @@
 App::App()
 	:
 	wnd( 800,600,"Game of Life" ),
-	triangle( wnd.Gfx() )
+	sphere( wnd.Gfx() )
 {
 	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,3.0f / 4.0f,0.5f,40.0f ) );
 }
@@ -51,7 +51,7 @@ void App::DoFrame()
 	{
 		dPos.x += 0.5f / 60.0f;
 	}
-	triangle.Update( dPos );
+	sphere.Update( dPos );
 
-	triangle.Draw( wnd.Gfx() );
+	sphere.Draw( wnd.Gfx() );
 }
