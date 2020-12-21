@@ -34,24 +34,7 @@ void App::DoFrame()
 		}
 	}
 
-	DirectX::XMFLOAT3 dPos = {};
-	if ( wnd.kbd.IsKeyPressed( 'W' ) )
-	{
-		dPos.z += 0.5f / 60.0f;
-	}
-	if ( wnd.kbd.IsKeyPressed( 'S' ) )
-	{
-		dPos.z -= 0.5f / 60.0f;
-	}
-	if ( wnd.kbd.IsKeyPressed( 'A' ) )
-	{
-		dPos.x -= 0.5f / 60.0f;
-	}
-	if ( wnd.kbd.IsKeyPressed( 'D' ) )
-	{
-		dPos.x += 0.5f / 60.0f;
-	}
-	sphere.Update( dPos );
+	sphere.Update( 1.0f / 60.0f );
 
 	sphere.Draw( wnd.Gfx() );
 }

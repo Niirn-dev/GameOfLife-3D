@@ -35,13 +35,13 @@ public:
 			}
 		}
 
-		const auto iNorthPole = vertices.size();
+		const auto iNorthPole = (unsigned short)vertices.size();
 		vertices.push_back( {} );
 		dx::XMStoreFloat3(
 			&vertices.back(),
 			base
 		);
-		const auto iSouthPole = vertices.size();
+		const auto iSouthPole = (unsigned short)vertices.size();
 		vertices.push_back( {} );
 		dx::XMStoreFloat3(
 			&vertices.back(),

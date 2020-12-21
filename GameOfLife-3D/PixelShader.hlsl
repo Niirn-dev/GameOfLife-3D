@@ -1,9 +1,9 @@
 cbuffer cbuf
 {
-	float4 c;
+	float4 c[6];
 };
 
-float4 main() : SV_TARGET
+float4 main( uint id : SV_PrimitiveID ) : SV_TARGET
 {
-	return c;
+	return c[id % 5];
 }

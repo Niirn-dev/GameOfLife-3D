@@ -39,19 +39,15 @@ TestSphere::TestSphere( Graphics& gfx )
 	AddBind( std::make_unique<TransformCBuf>( gfx,*this ) );
 }
 
-void TestSphere::Update( DirectX::XMFLOAT3 dPos ) noexcept
+void TestSphere::Update( float dt ) noexcept
 {
-	namespace dx = DirectX;
-	dx::XMStoreFloat3(
-		&pos,
-		dx::XMVectorAdd(
-			dx::XMLoadFloat3( &pos ),
-			dx::XMLoadFloat3( &dPos )
-		)
-	);
+	pitch += dAngle * dt;
+	yaw += dAngle * dt;
+	roll += dAngle * dt;
 }
 
 DirectX::XMMATRIX TestSphere::GetTransformXM() const noexcept
 {
-	return DirectX::XMMatrixTranslation( pos.x,pos.y,pos.z );
+	return DirectX::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
+		DirectX::XMMatrixTranslation( pos.x,pos.y,pos.z );
 }
