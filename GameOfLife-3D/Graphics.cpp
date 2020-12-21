@@ -59,6 +59,38 @@ Graphics::Graphics( HWND hWnd,int width,int height )
 	GFX_THROW_INFO( pSwap->GetBuffer( 0,__uuidof( ID3D11Resource ),&pBackBuffer ) );
 	GFX_THROW_INFO( pDevice->CreateRenderTargetView( pBackBuffer.Get(),nullptr,&pTarget ) );
 
+	// create depth stencil state
+	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	wrl::ComPtr<ID3D11DepthStencilState> pDSState;
+	GFX_THROW_INFO( pDevice->CreateDepthStencilState( &dsDesc,&pDSState ) );
+
+	// bind depth state
+	GFX_THROW_INFO_ONLY( pContext->OMSetDepthStencilState( pDSState.Get(),1u ) );
+
+	// create depth stencil texture
+	wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
+	D3D11_TEXTURE2D_DESC depthDesc = {};
+	depthDesc.Width = width;
+	depthDesc.Height = height;
+	depthDesc.MipLevels = 1u;
+	depthDesc.ArraySize = 1u;
+	depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthDesc.SampleDesc.Count = 1u;
+	depthDesc.SampleDesc.Quality = 0u;
+	depthDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	GFX_THROW_INFO( pDevice->CreateTexture2D( &depthDesc,nullptr,&pDepthStencil ) );
+
+	// create view of depth stencil texture
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0u;
+	GFX_THROW_INFO( pDevice->CreateDepthStencilView( pDepthStencil.Get(),&dsvDesc,&pDSV ) );
+
 	D3D11_VIEWPORT vp = {};
 	vp.Width = (float)width;
 	vp.Height = (float)height;
@@ -68,13 +100,14 @@ Graphics::Graphics( HWND hWnd,int width,int height )
 	vp.TopLeftY = 0.0f;
 	pContext->RSSetViewports( 1u,&vp );
 
-	GFX_THROW_INFO_ONLY( pContext->OMSetRenderTargets( 1u,pTarget.GetAddressOf(),nullptr ) );
+	pContext->OMSetRenderTargets( 1u,pTarget.GetAddressOf(),pDSV.Get() );
 }
 
 void Graphics::BeginFrame( float r,float g,float b ) noexcept
 {
 	const float color[] = { r,g,b,1.0f };
 	pContext->ClearRenderTargetView( pTarget.Get(),color );
+	pContext->ClearDepthStencilView( pDSV.Get(),D3D11_CLEAR_DEPTH,1.0f,0u );
 }
 
 void Graphics::EndFrame()
