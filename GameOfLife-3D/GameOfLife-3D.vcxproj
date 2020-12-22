@@ -180,6 +180,7 @@
     <ClCompile Include="TestSphere.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformCBuf.cpp" />
+    <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="TestSphere.h" />
     <ClInclude Include="Topology.h" />
     <ClInclude Include="TransformCBuf.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />

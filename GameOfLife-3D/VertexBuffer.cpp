@@ -3,22 +3,22 @@
 
 namespace wrl = Microsoft::WRL;
 
-VertexBuffer::VertexBuffer( Graphics& gfx,const std::vector<DirectX::XMFLOAT3>& vertices )
+VertexBuffer::VertexBuffer( Graphics& gfx,const VertexData& vertices )
 	:
-	stride( UINT( sizeof( DirectX::XMFLOAT3 ) ) ),
+	stride( (UINT)vertices.GetLayout().SizeBytes() ),
 	offset( 0u )
 {
 	INFOMAN( gfx );
 
 	D3D11_BUFFER_DESC desc = {};
-	desc.ByteWidth = UINT( vertices.size() * sizeof( DirectX::XMFLOAT3 ) );
+	desc.ByteWidth = UINT( vertices.SizeBytes() );
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.CPUAccessFlags = 0u;
 	desc.MiscFlags = 0u;
-	desc.StructureByteStride = sizeof( DirectX::XMFLOAT3 );
+	desc.StructureByteStride = stride;
 	D3D11_SUBRESOURCE_DATA srd = {};
-	srd.pSysMem = vertices.data();
+	srd.pSysMem = vertices.GetData();
 
 	GFX_THROW_INFO( GetDevice( gfx )->CreateBuffer( &desc,&srd,&pVertexBuffer ) );
 }

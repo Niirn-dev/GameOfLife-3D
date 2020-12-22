@@ -17,7 +17,7 @@ TestSphere::TestSphere( Graphics& gfx )
 	std::vector<D3D11_INPUT_ELEMENT_DESC> ieDesc = {
 		{ "Position",0u,DXGI_FORMAT_R32G32B32_FLOAT,0u,0u,D3D11_INPUT_PER_VERTEX_DATA,0u }
 	};
-	AddBind( std::make_unique<InputLayout>( gfx,pvsb,ieDesc ) );
+	AddBind( std::make_unique<InputLayout>( gfx,pvsb,mesh.vertices.GetLayout().GetD3DLayout() ) );
 
 	AddBind( std::make_unique<PixelShader>( gfx,L"PixelShader.cso" ) );
 

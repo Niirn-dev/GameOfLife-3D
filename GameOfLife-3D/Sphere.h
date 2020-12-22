@@ -106,6 +106,15 @@ public:
 			triIndices = std::move( SubdivideTriangles( vertices,triIndices ) );
 		}
 
+		// transform vector of vertices to dynamic vertex type
+		VertexData vd{ VertexLayout{}.Append( VertexLayout::ElementType::Position3D ) };
+		for ( const auto& v : vertices )
+		{
+			vd.EmplaceBack(
+				*reinterpret_cast<const DirectX::XMFLOAT3*>( &v )
+			);
+		}
+
 		// transform triangle indices to regular index list
 		std::vector<unsigned short> indices;
 		indices.reserve( triIndices.size() * 3 );
@@ -116,6 +125,6 @@ public:
 			indices.push_back( std::get<2>( ti ) );
 		}
 
-		return { std::move( vertices ),std::move( indices ) };
+		return { std::move( vd ),std::move( indices ) };
 	}
 };
