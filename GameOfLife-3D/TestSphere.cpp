@@ -4,7 +4,7 @@
 
 TestSphere::TestSphere( Graphics& gfx )
 {
-	const auto mesh = Sphere::MakeIcoSphere();
+	const auto mesh = Sphere::MakeIcoSphere( 2 );
 
 	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
