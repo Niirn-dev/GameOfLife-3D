@@ -6,96 +6,43 @@
 
 class Sphere
 {
-public:
-	static IndexedTriangleList MakeIcosahedral()
+private:
+	static constexpr float X = 0.525731112119133606f;
+	static constexpr float Z = 0.850650808352039932f;
+	static constexpr float N = 0.0f;
+
+	using TriangleIndices = std::tuple<unsigned short,unsigned short,unsigned short>;
+
+	static std::pair<std::vector<DirectX::XMFLOAT3>,std::vector<TriangleIndices>> MakeIcosahedron() noexcept
 	{
-		namespace dx = DirectX;
-		const auto base = dx::XMVectorSet( 1.0f,0.0f,0.0f,0.0f );
+		std::vector<DirectX::XMFLOAT3> vertices = {
+			{-X,N,Z},{X,N,Z},{-X,N,-Z},{X,N,-Z},
+			{N,Z,X},{N,Z,-X},{N,-Z,X},{N,-Z,-X},
+			{Z,X,N},{-Z,X,N},{Z,-X,N},{-Z,-X,N}
+		};
 
-		std::vector<dx::XMFLOAT3> vertices;
-		vertices.reserve( 14 );
+		std::vector<TriangleIndices> triIndices = {
+			{0,4,1},{0,9,4},{9,5,4},{4,5,8},{4,8,1},
+			{8,10,1},{8,3,10},{5,3,8},{5,2,3},{2,7,3},
+			{7,10,3},{7,6,10},{7,11,6},{11,0,6},{0,1,6},
+			{6,1,10},{9,0,11},{9,11,2},{9,2,5},{7,2,11}
+		};
 
-		for ( unsigned short iLat = 0; iLat < 2; ++iLat )
-		{
-			const auto latBase = dx::XMVector3Transform(
-				base,
-				dx::XMMatrixRotationZ( ( PI / 3.0f ) * ( iLat + 1 ) ) *
-				dx::XMMatrixRotationX( ( PI / 6.0f ) * iLat )
-			);
-			for ( unsigned short iLong = 0; iLong < 6; ++iLong )
-			{
-				vertices.push_back( {} );
-				dx::XMStoreFloat3(
-					&vertices.back(),
-					dx::XMVector3Transform(
-						latBase,
-						dx::XMMatrixRotationX( ( PI / 3.0f ) * iLong )
-					)
-				);
-			}
-		}
-
-		const auto iNorthPole = (unsigned short)vertices.size();
-		vertices.push_back( {} );
-		dx::XMStoreFloat3(
-			&vertices.back(),
-			base
-		);
-		const auto iSouthPole = (unsigned short)vertices.size();
-		vertices.push_back( {} );
-		dx::XMStoreFloat3(
-			&vertices.back(),
-			dx::XMVectorNegate( base )
-		);
+		return { std::move( vertices ),std::move( triIndices ) };
+	}
+public:
+	static IndexedTriangleList MakeIcoSphere() noexcept
+	{
+		auto [vertices,triIndices] = MakeIcosahedron();
 
 		std::vector<unsigned short> indices;
-		const auto calcIdx = []( unsigned short iLat,unsigned short iLong )
+		indices.reserve( triIndices.size() * 3 );
+		for ( const auto& ti : triIndices )
 		{
-			return iLat * (unsigned short)6 + iLong;
-		};
-		for ( unsigned short iLat = 0; iLat < 1; ++iLat )
-		{
-			for ( unsigned short iLong = 0; iLong < 5; ++iLong )
-			{
-				indices.push_back( calcIdx( iLat,iLong ) );
-				indices.push_back( calcIdx( iLat,iLong + 1 ) );
-				indices.push_back( calcIdx( iLat + 1,iLong ) );
-
-				indices.push_back( calcIdx( iLat,iLong + 1 ) );
-				indices.push_back( calcIdx( iLat + 1,iLong + 1 ) );
-				indices.push_back( calcIdx( iLat + 1,iLong ) );
-			}
-			// wrap band
-			indices.push_back( calcIdx( iLat,5 ) );
-			indices.push_back( calcIdx( iLat,0 ) );
-			indices.push_back( calcIdx( iLat + 1,5 ) );
-
-			indices.push_back( calcIdx( iLat,0 ) );
-			indices.push_back( calcIdx( iLat + 1,0 ) );
-			indices.push_back( calcIdx( iLat + 1,5 ) );
+			indices.push_back( std::get<0>( ti ) );
+			indices.push_back( std::get<1>( ti ) );
+			indices.push_back( std::get<2>( ti ) );
 		}
-
-		// cap fans
-		for ( unsigned short iLong = 0; iLong < 5; ++iLong )
-		{
-			// north pole
-			indices.push_back( iNorthPole );
-			indices.push_back( calcIdx( 0,iLong + 1 ) );
-			indices.push_back( calcIdx( 0,iLong ) );
-			// south pole
-			indices.push_back( iSouthPole );
-			indices.push_back( calcIdx( 1,iLong ) );
-			indices.push_back( calcIdx( 1,iLong + 1 ) );
-		}
-		// wrap cap fans
-		// north pole
-		indices.push_back( iNorthPole );
-		indices.push_back( calcIdx( 0,0 ) );
-		indices.push_back( calcIdx( 0,5 ) );
-		// south pole
-		indices.push_back( iSouthPole );
-		indices.push_back( calcIdx( 1,5 ) );
-		indices.push_back( calcIdx( 1,0 ) );
 
 		return { std::move( vertices ),std::move( indices ) };
 	}
