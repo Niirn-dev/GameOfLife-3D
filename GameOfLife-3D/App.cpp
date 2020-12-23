@@ -1,4 +1,5 @@
 #include "App.h"
+#include "imgui/imgui.h"
 
 App::App()
 	:
@@ -39,4 +40,9 @@ void App::DoFrame()
 	sphere.Update( 1.0f / 60.0f );
 
 	sphere.Draw( wnd.Gfx() );
+
+	if ( show_demo_window )
+	{
+		ImGui::ShowDemoWindow( &show_demo_window );
+	}
 }

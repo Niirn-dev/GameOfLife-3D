@@ -1,4 +1,5 @@
 #pragma once
+#include "ImguiManager.h"
 #include "Window.h"
 #include "Camera.h"
 #include "TestSphere.h"
@@ -15,7 +16,10 @@ private:
 	void DoFrame();
 
 private:
+	ImguiManager imguiManager;
 	Window wnd;
 	Camera cam;
 	TestSphere sphere;
+
+	bool show_demo_window = true;
 };

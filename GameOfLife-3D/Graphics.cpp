@@ -5,6 +5,8 @@
 #include <cassert>
 #include "GraphicsThrowMacros.h"
 #include <d3dcompiler.h>
+#include "imgui/imgui_impl_dx11.h"
+#include "imgui/imgui_impl_win32.h"
 
 #pragma comment( lib,"d3d11.lib" )
 #pragma comment( lib,"D3DCompiler.lib" )
@@ -101,10 +103,21 @@ Graphics::Graphics( HWND hWnd,int width,int height )
 	pContext->RSSetViewports( 1u,&vp );
 
 	pContext->OMSetRenderTargets( 1u,pTarget.GetAddressOf(),pDSV.Get() );
+	// init dx11 implementation of imgui
+	ImGui_ImplDX11_Init( pDevice.Get(),pContext.Get() );
+}
+
+Graphics::~Graphics()
+{
+	ImGui_ImplDX11_Shutdown();
 }
 
 void Graphics::BeginFrame( float r,float g,float b ) noexcept
 {
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
 	const float color[] = { r,g,b,1.0f };
 	pContext->ClearRenderTargetView( pTarget.Get(),color );
 	pContext->ClearDepthStencilView( pDSV.Get(),D3D11_CLEAR_DEPTH,1.0f,0u );
@@ -112,6 +125,9 @@ void Graphics::BeginFrame( float r,float g,float b ) noexcept
 
 void Graphics::EndFrame()
 {
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
+
 	HRESULT hr;
 #ifndef NDEBUG
 	infoManager.Set();

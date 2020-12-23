@@ -3,6 +3,8 @@
 #include <sstream>
 #include "WindowThrowMacros.h"
 #include "resource.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_win32.h"
 
 // WindowClass stuff
 Window::WindowClass Window::WindowClass::wndClass;
@@ -86,10 +88,13 @@ Window::Window( int width,int height,const char* name )
 	ShowWindow( hWnd,SW_SHOWDEFAULT );
 	// initialize graphics
 	pGfx = std::make_unique<Graphics>( hWnd,width,height );
+	// init win32 implementation of imgui
+	ImGui_ImplWin32_Init( hWnd );
 }
 
 Window::~Window()
 {
+	ImGui_ImplWin32_Shutdown();
 	DestroyWindow( hWnd );
 }
 
@@ -203,6 +208,11 @@ LRESULT CALLBACK Window::HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM
 
 LRESULT Window::HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
 {
+	if ( ImGui_ImplWin32_WndProcHandler( hWnd,msg,wParam,lParam ) )
+	{
+		return true;
+	}
+
 	switch ( msg )
 	{
 	case WM_CLOSE:

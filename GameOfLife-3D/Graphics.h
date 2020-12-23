@@ -48,6 +48,7 @@ public:
 	};
 public:
 	Graphics( HWND hWnd,int width,int height );
+	~Graphics();
 	Graphics( const Graphics& ) = delete;
 	Graphics& operator=( const Graphics& ) = delete;
 
