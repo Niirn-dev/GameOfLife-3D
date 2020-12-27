@@ -9,7 +9,8 @@ class TransformCBuf : public Bindable
 {
 	struct Transforms
 	{
-		DirectX::XMMATRIX worldProj = DirectX::XMMatrixIdentity();
+		DirectX::XMMATRIX worldView = DirectX::XMMatrixIdentity();
+		DirectX::XMMATRIX worldViewProj = DirectX::XMMatrixIdentity();
 	};
 public:
 	TransformCBuf( Graphics& gfx,const class Drawable& parent  );

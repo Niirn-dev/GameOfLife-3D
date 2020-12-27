@@ -16,11 +16,14 @@ void TransformCBuf::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 
 TransformCBuf::Transforms TransformCBuf::GetTransforms( Graphics& gfx ) const noexcept
 {
-	return { DirectX::XMMatrixTranspose( 
-		parent.GetTransformXM() * 
-		gfx.GetCamera() * 
-		gfx.GetProjection() 
-	) };
+	auto worldView = parent.GetTransformXM() * gfx.GetCamera();
+	return { 
+		DirectX::XMMatrixTranspose( worldView ),
+		DirectX::XMMatrixTranspose( 
+			worldView * 
+			gfx.GetProjection()
+		)
+	};
 }
 
 void TransformCBuf::UpdateBindImpl( Graphics& gfx,const Transforms& tfs ) noexcept( !IS_DEBUG )
