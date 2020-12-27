@@ -8,6 +8,9 @@ public:
 	TestSphere( Graphics& gfx );
 	void Update( float dt ) noexcept;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
+	void SpawnControlWindow() noexcept;
+private:
+	void Reset() noexcept;
 private:
 	DirectX::XMFLOAT3 pos = { 0.0f,0.0f,0.0f };
 	float pitch = 0.0f;

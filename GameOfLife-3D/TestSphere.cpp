@@ -1,6 +1,7 @@
 #include "TestSphere.h"
 #include "BindableCommon.h"
 #include "Sphere.h"
+#include "imgui/imgui.h"
 
 TestSphere::TestSphere( Graphics& gfx )
 {
@@ -37,4 +38,27 @@ DirectX::XMMATRIX TestSphere::GetTransformXM() const noexcept
 {
 	return DirectX::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
 		DirectX::XMMatrixTranslation( pos.x,pos.y,pos.z );
+}
+
+void TestSphere::SpawnControlWindow() noexcept
+{
+	if ( ImGui::Begin( "Sphere" ) )
+	{
+		ImGui::Text( "Position" );
+		ImGui::SliderFloat( "X",&pos.x,-10.0f,10.0f,"%.1f" );
+		ImGui::SliderFloat( "Y",&pos.y,-10.0f,10.0f,"%.1f" );
+		ImGui::SliderFloat( "Z",&pos.z,-10.0f,10.0f,"%.1f" );
+
+		if ( ImGui::Button( "Reset" ) )
+		{
+			Reset();
+		}
+
+		ImGui::End();
+	}
+}
+
+void TestSphere::Reset() noexcept
+{
+	pos = { 0.0f,0.0f,0.0f };
 }

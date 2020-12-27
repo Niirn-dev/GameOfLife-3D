@@ -26,6 +26,8 @@ int App::Go()
 
 void App::DoFrame()
 {
+	sphere.SpawnControlWindow();
+
 	while ( !wnd.kbd.IsKeyEmpty() )
 	{
 		const auto e = wnd.kbd.ReadKey();
