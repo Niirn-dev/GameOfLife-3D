@@ -20,6 +20,4 @@ private:
 	Window wnd;
 	Camera cam;
 	TestSphere sphere;
-
-	bool show_demo_window = true;
 };
