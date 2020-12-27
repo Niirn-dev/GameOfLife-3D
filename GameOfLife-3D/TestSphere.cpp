@@ -4,8 +4,10 @@
 #include "imgui/imgui.h"
 
 TestSphere::TestSphere( Graphics& gfx )
+	:
+	gfx( gfx )
 {
-	const auto mesh = Sphere::MakeIcoSphere( 2 );
+	const auto mesh = Sphere::MakeIcoSphere( nSubdivisions );
 
 	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
@@ -49,16 +51,34 @@ void TestSphere::SpawnControlWindow() noexcept
 		ImGui::SliderFloat( "Y",&pos.y,-10.0f,10.0f,"%.1f" );
 		ImGui::SliderFloat( "Z",&pos.z,-10.0f,10.0f,"%.1f" );
 
-		if ( ImGui::Button( "Reset" ) )
+		if ( ImGui::Button( "Reset Position" ) )
 		{
-			Reset();
+			ResetPosition();
+		}
+
+		auto oldSubdiv = nSubdivisions;
+		if ( ImGui::SliderInt( "Mesh subdivisions",&nSubdivisions,0,4 ) )
+		{
+			assert( nSubdivisions != oldSubdiv );
+			UpdateMesh();
 		}
 
 		ImGui::End();
 	}
 }
 
-void TestSphere::Reset() noexcept
+void TestSphere::UpdateMesh() noexcept
+{
+	auto mesh = Sphere::MakeIcoSphere( nSubdivisions );
+
+	auto pvb = QueryBindable<VertexBuffer>();
+	pvb->UpdateBuffer( gfx,mesh.vertices );
+
+	auto pib = QueryBindable<IndexBuffer>();
+	pib->UpdateBuffer( gfx,mesh.indices );
+}
+
+void TestSphere::ResetPosition() noexcept
 {
 	pos = { 0.0f,0.0f,0.0f };
 }

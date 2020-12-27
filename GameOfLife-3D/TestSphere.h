@@ -10,11 +10,14 @@ public:
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 	void SpawnControlWindow() noexcept;
 private:
-	void Reset() noexcept;
+	void UpdateMesh() noexcept;
+	void ResetPosition() noexcept;
 private:
+	Graphics& gfx;
 	DirectX::XMFLOAT3 pos = { 0.0f,0.0f,0.0f };
 	float pitch = 0.0f;
 	float yaw = 0.0f;
 	float roll = 0.0f;
 	static constexpr float dAngle = 1.0f;
+	int nSubdivisions = 2;
 };

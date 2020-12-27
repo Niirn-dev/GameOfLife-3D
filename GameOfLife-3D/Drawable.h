@@ -18,7 +18,7 @@ protected:
 	template<class T>
 	T* QueryBindable() noexcept
 	{
-		static_assert( std::is_base_of_v<Bindable,T>,"Template type B should be derived from Bindable" );
+		static_assert( std::is_base_of_v<Bindable,T>,"Template type T should be derived from Bindable" );
 		for ( auto& b : bindPtrs )
 		{
 			if ( auto pBind = dynamic_cast<T*>( b.get() ) )

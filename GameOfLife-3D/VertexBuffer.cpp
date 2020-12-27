@@ -8,6 +8,26 @@ VertexBuffer::VertexBuffer( Graphics& gfx,const VertexData& vertices )
 	stride( (UINT)vertices.GetLayout().SizeBytes() ),
 	offset( 0u )
 {
+	CreateBuffer( gfx,vertices );
+}
+
+void VertexBuffer::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
+{
+	INFOMAN( gfx );
+
+	GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetVertexBuffers( 0u,1u,pVertexBuffer.GetAddressOf(),&stride,&offset ) );
+}
+
+void VertexBuffer::UpdateBuffer( Graphics& gfx,const VertexData& vertices )
+{
+	pVertexBuffer.Reset();
+	stride = (UINT)vertices.GetLayout().SizeBytes();
+
+	CreateBuffer( gfx,vertices );
+}
+
+void VertexBuffer::CreateBuffer( Graphics & gfx,const VertexData & vertices )
+{
 	INFOMAN( gfx );
 
 	D3D11_BUFFER_DESC desc = {};
@@ -21,11 +41,4 @@ VertexBuffer::VertexBuffer( Graphics& gfx,const VertexData& vertices )
 	srd.pSysMem = vertices.GetData();
 
 	GFX_THROW_INFO( GetDevice( gfx )->CreateBuffer( &desc,&srd,&pVertexBuffer ) );
-}
-
-void VertexBuffer::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
-{
-	INFOMAN( gfx );
-
-	GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetVertexBuffers( 0u,1u,pVertexBuffer.GetAddressOf(),&stride,&offset ) );
 }
