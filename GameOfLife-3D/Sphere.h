@@ -107,11 +107,16 @@ public:
 		}
 
 		// transform vector of vertices to dynamic vertex type
-		VertexData vd{ VertexLayout{}.Append( VertexLayout::ElementType::Position3D ) };
+		VertexData vd{ VertexLayout{}
+			.Append( VertexLayout::ElementType::Position3D )
+			.Append( VertexLayout::ElementType::Normal )
+		};
 		for ( const auto& v : vertices )
 		{
+			const auto normVec = DirectX::XMVector3Normalize( DirectX::XMLoadFloat3( &v ) );
 			vd.EmplaceBack(
-				*reinterpret_cast<const DirectX::XMFLOAT3*>( &v )
+				v,
+				*reinterpret_cast<const DirectX::XMFLOAT3*>( &normVec )
 			);
 		}
 

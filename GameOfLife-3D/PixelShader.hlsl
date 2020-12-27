@@ -1,5 +1,27 @@
-float4 main( uint id : SV_PrimitiveID ) : SV_TARGET
+cbuffer LightCBuf
+{
+	float3 lightViewPos;
+	float3 ambient;
+	float3 diffuseColor;
+	float diffuseIntensity;
+	float attConst;
+	float attLin;
+	float attQuad;
+};
+
+float4 main( float3 viewPos : Position,float3 viewNorm : Normal,uint id : SV_PrimitiveID ) : SV_TARGET
 {
 	float shade = ( id % 10 ) * 0.1f;
-	return float4( shade,shade,shade,1.0f );
+	float3 matColor = float3( shade,shade,shade );
+
+	float3 vToL = lightViewPos - viewPos;
+	float dist = length( vToL );
+	float3 dir = vToL / dist;
+
+	float att = 1 / ( attQuad * dist * dist + attLin * dist + attConst );
+	float3 diffuse = diffuseColor * att * diffuseIntensity * max( 0.0f,dot( dir,viewNorm ) );
+
+	float3 finalColor = ( diffuse + ambient ) * matColor;
+
+	return float4( finalColor,1.0f );
 }

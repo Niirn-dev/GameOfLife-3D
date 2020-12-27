@@ -38,7 +38,7 @@ public:
 	{
 		using SysType = DirectX::XMFLOAT3;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-		static constexpr const char* semantic = "Position";
+		static constexpr const char* semantic = "Normal";
 		static constexpr const char* code = "N3";
 	};
 	template<> struct Map<ElemType::Float3Color>

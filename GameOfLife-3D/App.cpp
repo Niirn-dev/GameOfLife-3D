@@ -41,5 +41,6 @@ void App::DoFrame()
 
 	sphere.Update( 1.0f / 60.0f );
 
+	sphere.BindLight( wnd.Gfx() );
 	sphere.Draw( wnd.Gfx() );
 }

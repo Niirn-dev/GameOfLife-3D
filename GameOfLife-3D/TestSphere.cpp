@@ -17,12 +17,11 @@ TestSphere::TestSphere( Graphics& gfx )
 	auto pvsb = pvs->GetBlob();
 	AddBind( std::move( pvs ) );
 
-	std::vector<D3D11_INPUT_ELEMENT_DESC> ieDesc = {
-		{ "Position",0u,DXGI_FORMAT_R32G32B32_FLOAT,0u,0u,D3D11_INPUT_PER_VERTEX_DATA,0u }
-	};
 	AddBind( std::make_unique<InputLayout>( gfx,pvsb,mesh.vertices.GetLayout().GetD3DLayout() ) );
 
 	AddBind( std::make_unique<PixelShader>( gfx,L"PixelShader.cso" ) );
+
+	AddBind( std::make_unique<PixelConstantBuffer<LightBuffer>>( gfx ) );
 
 	AddBind( std::make_unique<IndexBuffer>( gfx,mesh.indices ) );
 
@@ -63,6 +62,20 @@ void TestSphere::SpawnControlWindow() noexcept
 
 		ImGui::End();
 	}
+}
+
+void TestSphere::BindLight( Graphics& gfx ) noexcept
+{
+	auto lcbData = lightCBuf;
+	DirectX::XMStoreFloat3(
+		&lcbData.lightPos,
+		DirectX::XMVector3Transform(
+			DirectX::XMLoadFloat3( &lightCBuf.lightPos ),
+			gfx.GetCamera()
+		)
+	);
+	auto pcb = QueryBindable<PixelConstantBuffer<LightBuffer>>();
+	pcb->Update( gfx,lcbData );
 }
 
 void TestSphere::UpdateMesh() noexcept
