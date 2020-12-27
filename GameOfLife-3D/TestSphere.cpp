@@ -56,10 +56,8 @@ void TestSphere::SpawnControlWindow() noexcept
 			ResetPosition();
 		}
 
-		auto oldSubdiv = nSubdivisions;
 		if ( ImGui::SliderInt( "Mesh subdivisions",&nSubdivisions,0,4 ) )
 		{
-			assert( nSubdivisions != oldSubdiv );
 			UpdateMesh();
 		}
 
