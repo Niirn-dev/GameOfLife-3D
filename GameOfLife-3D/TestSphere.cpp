@@ -3,11 +3,13 @@
 #include "Sphere.h"
 #include "imgui/imgui.h"
 
-TestSphere::TestSphere( Graphics& gfx )
+TestSphere::TestSphere( Graphics& gfx,int nSubdiv,float size )
 	:
-	gfx( gfx )
+	gfx( gfx ),
+	nSubdivisions( nSubdiv )
 {
-	const auto mesh = Sphere::MakeIcoSphere( nSubdivisions );
+	auto mesh = Sphere::MakeIcoSphere( nSubdivisions );
+	mesh.Transform( DirectX::XMMatrixScaling( size,size,size ) );
 
 	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 

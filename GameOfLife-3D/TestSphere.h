@@ -5,7 +5,7 @@
 class TestSphere : public Drawable
 {
 public:
-	TestSphere( Graphics& gfx );
+	TestSphere( Graphics& gfx,int nSubdivisions = 2,float size = 1.0f );
 	void Update( float dt ) noexcept;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 	void SpawnControlWindow() noexcept;
