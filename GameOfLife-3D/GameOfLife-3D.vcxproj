@@ -184,6 +184,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NiiException.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="TestSphere.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformCBuf.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="NiiException.h" />
     <ClInclude Include="NiiMath.h" />
     <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="TestSphere.h" />

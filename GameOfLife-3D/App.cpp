@@ -4,7 +4,8 @@
 App::App()
 	:
 	wnd( 1600,900,"Game of Life" ),
-	sphere( wnd.Gfx() )
+	sphere( wnd.Gfx() ),
+	light( wnd.Gfx() )
 {
 	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,wnd.Gfx().GetAspectRatio(),0.5f,40.0f ) );
 }
@@ -27,6 +28,7 @@ int App::Go()
 void App::DoFrame()
 {
 	sphere.SpawnControlWindow();
+	light.SpawnControlWindow();
 
 	while ( !wnd.kbd.IsKeyEmpty() )
 	{
@@ -41,6 +43,7 @@ void App::DoFrame()
 
 	sphere.Update( 1.0f / 60.0f );
 
-	sphere.BindLight( wnd.Gfx() );
+	light.BindLightBuffer( wnd.Gfx() );
 	sphere.Draw( wnd.Gfx() );
+	light.Draw( wnd.Gfx() );
 }

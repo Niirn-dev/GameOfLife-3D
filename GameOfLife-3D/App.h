@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Camera.h"
 #include "TestSphere.h"
+#include "PointLight.h"
 
 class App
 {
@@ -20,4 +21,5 @@ private:
 	Window wnd;
 	Camera cam;
 	TestSphere sphere;
+	PointLight light;
 };

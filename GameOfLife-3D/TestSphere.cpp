@@ -23,8 +23,6 @@ TestSphere::TestSphere( Graphics& gfx,int nSubdiv,float size )
 
 	AddBind( std::make_unique<PixelShader>( gfx,L"PixelShader.cso" ) );
 
-	AddBind( std::make_unique<PixelConstantBuffer<LightBuffer>>( gfx ) );
-
 	AddBind( std::make_unique<IndexBuffer>( gfx,mesh.indices ) );
 
 	AddBind( std::make_unique<TransformCBuf>( gfx,*this ) );
@@ -66,18 +64,9 @@ void TestSphere::SpawnControlWindow() noexcept
 	}
 }
 
-void TestSphere::BindLight( Graphics& gfx ) noexcept
+void TestSphere::SetPosition( DirectX::XMFLOAT3 pos_in ) noexcept
 {
-	auto lcbData = lightCBuf;
-	DirectX::XMStoreFloat3(
-		&lcbData.lightPos,
-		DirectX::XMVector3Transform(
-			DirectX::XMLoadFloat3( &lightCBuf.lightPos ),
-			gfx.GetCamera()
-		)
-	);
-	auto pcb = QueryBindable<PixelConstantBuffer<LightBuffer>>();
-	pcb->Update( gfx,lcbData );
+	pos = pos_in;
 }
 
 void TestSphere::UpdateMesh() noexcept
