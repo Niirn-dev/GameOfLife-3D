@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "imgui\imgui.h"
 
 namespace dx = DirectX;
 
@@ -23,6 +24,28 @@ DirectX::XMMATRIX Camera::GetMatrix() const noexcept
         vecLookAt,
         dx::XMVectorSet( 0.0f,1.0f,0.0f,0.0f )
     );
+}
+
+void Camera::SpawnControlWindow() noexcept
+{
+    if ( ImGui::Begin( "Camera" ) )
+    {
+        ImGui::Text( "Position" );
+        ImGui::SliderFloat( "X",&pos.x,-20.0f,20.0f,"%.1f" );
+        ImGui::SliderFloat( "Y",&pos.y,-20.0f,20.0f,"%.1f" );
+        ImGui::SliderFloat( "Z",&pos.z,-20.0f,20.0f,"%.1f" );
+
+        ImGui::Text( "Orientation" );
+        ImGui::SliderAngle( "Pitch",&pitch,-89.95f,89.95f );
+        ImGui::SliderAngle( "Yaw",&yaw,-180.0f,180.0f );
+
+        if ( ImGui::Button( "Reset" ) )
+        {
+            Reset();
+        }
+
+        ImGui::End();
+    }
 }
 
 void Camera::Reset() noexcept

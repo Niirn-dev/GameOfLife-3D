@@ -7,6 +7,8 @@ class Camera
 public:
 	Camera() noexcept;
 	DirectX::XMMATRIX GetMatrix() const noexcept;
+	void SpawnControlWindow() noexcept;
+private:
 	void Reset() noexcept;
 private:
 	DirectX::XMFLOAT3 pos = {};

@@ -9,7 +9,7 @@ cbuffer LightCBuf
 	float attQuad;
 };
 
-float4 main( float3 viewPos : Position,float3 viewNorm : Normal,uint id : SV_PrimitiveID ) : SV_TARGET
+float4 main( float3 viewPos : Position,float3 viewNorm : Normal,uint id : SV_PrimitiveID ) : SV_Target
 {
 	float shade = ( id % 10 ) * 0.1f;
 	float3 matColor = float3( shade,shade,shade );
@@ -19,9 +19,9 @@ float4 main( float3 viewPos : Position,float3 viewNorm : Normal,uint id : SV_Pri
 	float3 dir = vToL / dist;
 
 	float att = 1 / ( attQuad * dist * dist + attLin * dist + attConst );
-	float3 diffuse = diffuseColor * att * diffuseIntensity * max( 0.0f,dot( dir,viewNorm ) );
+	float3 diffuse = diffuseColor * att * diffuseIntensity * max( 0.0f,dot( dir,normalize( viewNorm ) ) );
 
-	float3 finalColor = ( diffuse + ambient ) * matColor;
+	float3 finalColor = saturate( ( diffuse + ambient ) * matColor );
 
 	return float4( finalColor,1.0f );
 }

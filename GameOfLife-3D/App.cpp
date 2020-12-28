@@ -29,6 +29,7 @@ void App::DoFrame()
 {
 	sphere.SpawnControlWindow();
 	light.SpawnControlWindow();
+	cam.SpawnControlWindow();
 
 	while ( !wnd.kbd.IsKeyEmpty() )
 	{
