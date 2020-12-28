@@ -25,10 +25,10 @@ private:
 		};
 
 		std::vector<TriangleIndices> triIndices = {
-			{0,4,1},{0,9,4},{9,5,4},{4,5,8},{4,8,1},
-			{8,10,1},{8,3,10},{5,3,8},{5,2,3},{2,7,3},
-			{7,10,3},{7,6,10},{7,11,6},{11,0,6},{0,1,6},
-			{6,1,10},{9,0,11},{9,11,2},{9,2,5},{7,2,11}
+			{0,1,4},{0,4,9},{9,4,5},{4,8,5},{4,1,8},
+			{8,1,10},{8,10,3},{5,8,3},{5,3,2},{2,3,7},
+			{7,3,10},{7,10,6},{7,6,11},{11,6,0},{0,6,1},
+			{6,10,1},{9,11,0},{9,2,11},{9,5,2},{7,11,2}
 		};
 
 		return { std::move( vertices ),std::move( triIndices ) };
@@ -113,7 +113,8 @@ public:
 		};
 		for ( const auto& v : vertices )
 		{
-			const auto normVec = DirectX::XMVector3Normalize( DirectX::XMLoadFloat3( &v ) );
+			// since generated mesh is that of unit sphere no need to normalize
+			const auto normVec = DirectX::XMLoadFloat3( &v );
 			vd.EmplaceBack(
 				v,
 				*reinterpret_cast<const DirectX::XMFLOAT3*>( &normVec )

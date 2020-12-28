@@ -19,7 +19,7 @@ float4 main( float3 viewPos : Position,float3 viewNorm : Normal ) : SV_Target
 	float dist = length( vToL );
 	float3 dir = vToL / dist;
 
-	float att = 1 / ( attQuad * dist * dist + attLin * dist + attConst );
+	float att = 1.0f / ( attQuad * dist * dist + attLin * dist + attConst );
 	float3 diffuse = diffuseColor * att * diffuseIntensity * max( 0.0f,dot( dir,normalize( viewNorm ) ) );
 
 	float3 finalColor = saturate( ( diffuse + ambient ) * matColor );
