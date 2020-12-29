@@ -10,7 +10,7 @@ class Drawable
 {
 public:
 	virtual ~Drawable() = default;
-	void Draw( class Graphics& gfx) noexcept( !IS_DEBUG );
+	void Draw( class Graphics& gfx ) noexcept( !IS_DEBUG );
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 protected:
 	void AddBind( std::unique_ptr<Bindable> bind ) noexcept;

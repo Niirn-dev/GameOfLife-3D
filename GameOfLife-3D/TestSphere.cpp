@@ -3,84 +3,61 @@
 #include "Sphere.h"
 #include "imgui/imgui.h"
 
-TestSphere::TestSphere( Graphics& gfx,int nSubdiv,float size )
+TestSphere::TestSphere( Graphics& gfx,int nSubdivisions,float radius )
 	:
 	gfx( gfx ),
-	nSubdivisions( nSubdiv )
-{
-	auto mesh = Sphere::MakeIcoSphere( nSubdivisions );
-	mesh.Transform( DirectX::XMMatrixScaling( size,size,size ) );
-
-	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
-
-	AddBind( std::make_unique<VertexBuffer>( gfx,mesh.vertices ) );
-
-	auto pvs = std::make_unique<VertexShader>( gfx,L"VertexShader.cso" );
-	auto pvsb = pvs->GetBlob();
-	AddBind( std::move( pvs ) );
-
-	AddBind( std::make_unique<InputLayout>( gfx,pvsb,mesh.vertices.GetLayout().GetD3DLayout() ) );
-
-	AddBind( std::make_unique<PixelShader>( gfx,L"PixelShader.cso" ) );
-
-	AddBind( std::make_unique<IndexBuffer>( gfx,mesh.indices ) );
-
-	AddBind( std::make_unique<TransformCBuf>( gfx,*this ) );
-}
+	nSubdiv( nSubdivisions ),
+	r( radius ),
+	mesh( gfx,nSubdivisions,radius )
+{}
 
 void TestSphere::Update( float dt ) noexcept
 {
-	pitch += dAngle * dt;
-	yaw += dAngle * dt;
-	roll += dAngle * dt;
+	mesh.IncOrientation( dAngle * dt,dAngle * dt,dAngle * dt );
 }
 
-DirectX::XMMATRIX TestSphere::GetTransformXM() const noexcept
+void TestSphere::Draw( Graphics& gfx ) noexcept( !IS_DEBUG )
 {
-	return DirectX::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
-		DirectX::XMMatrixTranslation( pos.x,pos.y,pos.z );
+	mesh.Draw( gfx );
 }
 
 void TestSphere::SpawnControlWindow() noexcept
 {
 	if ( ImGui::Begin( "Sphere" ) )
 	{
-		ImGui::Text( "Position" );
-		ImGui::SliderFloat( "X",&pos.x,-10.0f,10.0f,"%.1f" );
-		ImGui::SliderFloat( "Y",&pos.y,-10.0f,10.0f,"%.1f" );
-		ImGui::SliderFloat( "Z",&pos.z,-10.0f,10.0f,"%.1f" );
-
+		{
+			ImGui::Text( "Position" );
+			auto pos = mesh.GetPosition();
+			bool posChanged = false;
+			posChanged |= ImGui::SliderFloat( "X",&pos.x,-10.0f,10.0f,"%.1f" );
+			posChanged |= ImGui::SliderFloat( "Y",&pos.y,-10.0f,10.0f,"%.1f" );
+			posChanged |= ImGui::SliderFloat( "Z",&pos.z,-10.0f,10.0f,"%.1f" );
+			if ( posChanged )
+			{
+				mesh.SetPosition( pos );
+			}
+		}
+		
 		if ( ImGui::Button( "Reset Position" ) )
 		{
 			ResetPosition();
 		}
 
-		if ( ImGui::SliderInt( "Mesh subdivisions",&nSubdivisions,0,4 ) )
+		if ( ImGui::SliderFloat( "Radius",&r,0.1f,3.0f,"%.1f" ) )
 		{
-			UpdateMesh();
+			mesh.SetRadius( r );
+		}
+
+		if ( ImGui::SliderInt( "Mesh subdivisions",&nSubdiv,0,4 ) )
+		{
+			mesh.SetMeshSubdivisions( gfx,nSubdiv );
 		}
 
 		ImGui::End();
 	}
 }
 
-void TestSphere::SetPosition( DirectX::XMFLOAT3 pos_in ) noexcept
-{
-	pos = pos_in;
-}
-
-void TestSphere::UpdateMesh() noexcept
-{
-	auto mesh = Sphere::MakeIcoSphere( nSubdivisions );
-
-	auto pvb = QueryBindable<VertexBuffer>();
-	pvb->UpdateBuffer( gfx,mesh.vertices );
-
-	auto pib = QueryBindable<IndexBuffer>();
-	pib->UpdateBuffer( gfx,mesh.indices );
-}
-
 void TestSphere::ResetPosition() noexcept
 {
-	pos = { 0.0f,0.0f,0.0f };
+	mesh.SetPosition( { 0.0f,0.0f,0.0f } );
 }

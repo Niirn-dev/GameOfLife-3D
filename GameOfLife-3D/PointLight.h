@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TestSphere.h"
+#include "PhongSphere.h"
 #include "ConstantBuffers.h"
 
 class PointLight
@@ -23,6 +23,6 @@ private:
 		float attLin = 0.045f;
 		float attQuad = 0.0075f;
 	} lightCBuf;
-	mutable TestSphere mesh;
+	mutable PhongSphere mesh;
 	mutable std::unique_ptr<PixelConstantBuffer<LightBuffer>> pCBuff;
 };
