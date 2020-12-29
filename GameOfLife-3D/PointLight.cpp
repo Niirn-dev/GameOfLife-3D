@@ -42,9 +42,9 @@ void PointLight::SpawnControlWindow() noexcept
 		ImGui::SliderFloat( "Diff. intensity",&lightCBuf.diffuseIntensity,0.00f,4.00f,"%.2f" );
 
 		ImGui::Text( "Attenuation" );
-		ImGui::SliderFloat( "Constant",&lightCBuf.attConst,0.01f,10.0f,"%.2f" );
-		ImGui::SliderFloat( "Linear",&lightCBuf.attLin,0.001f,10.0f,"%.3f" );
-		ImGui::SliderFloat( "Quadratic",&lightCBuf.attQuad,0.0001f,10.0f,"%.4f" );
+		ImGui::SliderFloat( "Constant",&lightCBuf.attConst,0.01f,5.0f,"%.2f" );
+		ImGui::SliderFloat( "Linear",&lightCBuf.attLin,0.001f,1.0f,"%.3f" );
+		ImGui::SliderFloat( "Quadratic",&lightCBuf.attQuad,0.0001f,1.0f,"%.4f" );
 
 		if ( ImGui::Button( "Reset" ) )
 		{
