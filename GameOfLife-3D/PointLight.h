@@ -15,7 +15,7 @@ private:
 private:
 	struct LightBuffer
 	{
-		alignas( 16 ) DirectX::XMFLOAT3 pos = { 1.0f,1.0f,0.0f };
+		alignas( 16 ) DirectX::XMFLOAT3 pos = { 1.0f,1.0f,-2.0f };
 		alignas( 16 ) DirectX::XMFLOAT3 ambient = { 0.012f,0.0f,0.008f };
 		alignas( 16 ) DirectX::XMFLOAT3 diffuse = { 1.0f,0.0f,0.0f };
 		float diffuseIntensity = 1.0f;

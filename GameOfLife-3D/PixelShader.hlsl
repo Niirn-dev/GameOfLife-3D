@@ -9,10 +9,9 @@ cbuffer LightCBuf
 	float attQuad;
 };
 
-float4 main( float3 viewPos : Position,float3 viewNorm : Normal ) : SV_Target
+float4 main( float3 viewPos : Position,float3 viewNorm : Normal,uint id : SV_PrimitiveID ) : SV_Target
 {
-	// float shade = ( id % 10 ) * 0.1f;
-	float shade = 0.6f;
+	float shade = ( id % 10 ) * 0.1f;
 	float3 matColor = float3( shade,shade,shade );
 
 	float3 vToL = lightViewPos - viewPos;
