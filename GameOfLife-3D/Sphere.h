@@ -95,8 +95,10 @@ private:
 		return std::move( newTriangleIndices );
 	}
 public:
-	static IndexedTriangleList MakeIcoSphere( int nSubdivisions = 0 ) noexcept
+	static IndexedTriangleList MakeIcoSphere( int nSubdivisions = 0,float radius = 1.0f ) noexcept
 	{
+		namespace dx = DirectX;
+
 		// get model of base icosahendron
 		auto [vertices,triIndices] = MakeIcosahedron();
 
@@ -114,10 +116,14 @@ public:
 		for ( const auto& v : vertices )
 		{
 			// since generated mesh is that of unit sphere no need to normalize
-			const auto normVec = DirectX::XMLoadFloat3( &v );
+			const auto vNorm = dx::XMLoadFloat3( &v );
+			const auto vPos = dx::XMVector3Transform(
+				dx::XMLoadFloat3( &v ),
+				dx::XMMatrixScaling( radius,radius,radius )
+			);
 			vd.EmplaceBack(
-				v,
-				*reinterpret_cast<const DirectX::XMFLOAT3*>( &normVec )
+				*reinterpret_cast<const dx::XMFLOAT3*>( &vPos ),
+				*reinterpret_cast<const dx::XMFLOAT3*>( &vNorm )
 			);
 		}
 
