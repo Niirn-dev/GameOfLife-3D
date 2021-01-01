@@ -74,7 +74,7 @@ public:
 
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override
 	{
-		INFOMAN( gfx );
+		INFOMAN_ONLY( gfx );
 
 		GFX_THROW_INFO_ONLY( GetContext( gfx )->VSSetConstantBuffers( slot,1u,pConstantBuffer.GetAddressOf() ) );
 	}
@@ -92,7 +92,7 @@ public:
 
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override
 	{
-		INFOMAN( gfx );
+		INFOMAN_ONLY( gfx );
 
 		GFX_THROW_INFO_ONLY( GetContext( gfx )->PSSetConstantBuffers( slot,1u,pConstantBuffer.GetAddressOf() ) );
 	}

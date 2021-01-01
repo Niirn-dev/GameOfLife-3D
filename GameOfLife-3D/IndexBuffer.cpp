@@ -10,7 +10,7 @@ IndexBuffer::IndexBuffer( Graphics& gfx,const std::vector<unsigned short>& indic
 
 void IndexBuffer::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
 {
-    INFOMAN( gfx );
+    INFOMAN_ONLY( gfx );
 
     GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetIndexBuffer( 
         pIndexBuffer.Get(),

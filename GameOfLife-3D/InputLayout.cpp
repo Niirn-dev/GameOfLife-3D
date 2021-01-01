@@ -16,7 +16,7 @@ InputLayout::InputLayout( Graphics& gfx,ID3DBlob* pBlob,const std::vector<D3D11_
 
 void InputLayout::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
 {
-	INFOMAN( gfx );
+	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetInputLayout( pInputLayout.Get() ) );
 }

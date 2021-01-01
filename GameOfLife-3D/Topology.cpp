@@ -8,7 +8,7 @@ Topology::Topology( Graphics& gfx,D3D11_PRIMITIVE_TOPOLOGY type )
 
 void Topology::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
 {
-	INFOMAN( gfx );
+	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetPrimitiveTopology( type ) );
 }

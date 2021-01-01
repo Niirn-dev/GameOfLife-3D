@@ -21,7 +21,7 @@ PixelShader::PixelShader( Graphics& gfx,const std::wstring& filePath )
 
 void PixelShader::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 {
-	INFOMAN( gfx );
+	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->PSSetShader( pPixelShader.Get(),nullptr,0u ) );
 }

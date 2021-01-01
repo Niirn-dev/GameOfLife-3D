@@ -21,6 +21,8 @@
 // this.GetInfoManager( Graphics& gfx ) must exist
 #ifndef NDEBUG
 #define INFOMAN(gfx) HRESULT hr; DxgiInfoManager& infoManager = GetInfoManager((gfx))
+#define INFOMAN_ONLY(gfx) DxgiInfoManager& infoManager = GetInfoManager((gfx))
 #else
 #include INFOMAN(gfx) HRESULT hr;
+#include INFOMAN_ONLY(gfx)
 #endif

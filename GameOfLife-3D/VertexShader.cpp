@@ -15,7 +15,7 @@ VertexShader::VertexShader( Graphics& gfx,const std::wstring& filePath )
 
 void VertexShader::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
 {
-    INFOMAN( gfx );
+    INFOMAN_ONLY( gfx );
 
     GFX_THROW_INFO_ONLY( GetContext( gfx )->VSSetShader( pVertexShader.Get(),nullptr,0u ) );
 }

@@ -13,7 +13,7 @@ VertexBuffer::VertexBuffer( Graphics& gfx,const VertexData& vertices )
 
 void VertexBuffer::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 {
-	INFOMAN( gfx );
+	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetVertexBuffers( 0u,1u,pVertexBuffer.GetAddressOf(),&stride,&offset ) );
 }
