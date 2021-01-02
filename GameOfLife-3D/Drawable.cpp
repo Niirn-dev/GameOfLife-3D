@@ -13,7 +13,7 @@ void Drawable::Draw( Graphics& gfx ) noexcept( !IS_DEBUG )
 	gfx.DrawIndexed( pIndexBuffer->GetCount() );
 }
 
-void Drawable::AddBind( std::unique_ptr<Bindable> bind ) noexcept
+void Drawable::AddBind( std::shared_ptr<Bindable> bind ) noexcept
 {
 	if ( auto pi = dynamic_cast<IndexBuffer*>( bind.get() ) )
 	{
