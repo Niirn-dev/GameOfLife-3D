@@ -9,6 +9,7 @@ public:
 	IndexBuffer( Graphics& gfx,const std::vector<unsigned short>& indices );
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override;
 
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,const std::string& tag,const std::vector<unsigned short>& indices ) noexcept( !IS_DEBUG );
 	template<typename...Ignore>
 	static std::string GenerateUID( const std::string& tag,Ignore&&... ignore ) noexcept
 	{

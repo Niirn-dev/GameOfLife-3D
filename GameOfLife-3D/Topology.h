@@ -8,6 +8,7 @@ public:
 	Topology( Graphics& gfx,D3D11_PRIMITIVE_TOPOLOGY type );
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override;
 
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,D3D11_PRIMITIVE_TOPOLOGY type ) noexcept( !IS_DEBUG );
 	static std::string GenerateUID( D3D11_PRIMITIVE_TOPOLOGY type ) noexcept;
 	std::string GetUID() const noexcept override;
 private:

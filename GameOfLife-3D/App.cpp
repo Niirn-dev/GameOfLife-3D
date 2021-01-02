@@ -17,10 +17,10 @@ App::App()
 	{
 		auto mesh = Sphere::MakeIcoSphere();
 		using namespace std::string_literals;
-		auto vb0 = BindableCodex::Resolve<VertexBuffer>( wnd.Gfx(),"TEST"s,mesh.vertices );
+		auto vb0 = VertexBuffer::Resolve( wnd.Gfx(),"TEST"s,mesh.vertices );
 		{
-			auto vb1 = BindableCodex::Resolve<VertexBuffer>( wnd.Gfx(),"TEST"s,mesh.vertices );
-			auto vb2 = BindableCodex::Resolve<VertexBuffer>( wnd.Gfx(),"TEST"s,mesh.vertices );
+			auto vb1 = VertexBuffer::Resolve( wnd.Gfx(),"TEST"s,mesh.vertices );
+			auto vb2 = VertexBuffer::Resolve( wnd.Gfx(),"TEST"s,mesh.vertices );
 		}
 		int q = 123;
 	}

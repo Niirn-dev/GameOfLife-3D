@@ -2,6 +2,7 @@
 
 #include "Bindable.h"
 #include "GraphicsThrowMacros.h"
+#include "BindableCodex.h"
 
 template<class C>
 class ConstantBuffer : public Bindable
@@ -79,6 +80,14 @@ public:
 		GFX_THROW_INFO_ONLY( GetContext( gfx )->VSSetConstantBuffers( slot,1u,pConstantBuffer.GetAddressOf() ) );
 	}
 
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,UINT slot = 0u ) noexcept( !IS_DEBUG )
+	{
+		return BindableCodex::Resolve<VertexConstantBuffer<C>>( gfx,slot );
+	}
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,const C& consts,UINT slot = 0u ) noexcept( !IS_DEBUG )
+	{
+		return BindableCodex::Resolve<VertexConstantBuffer<C>>( gfx,consts,slot );
+	}
 	static std::string GenerateUID( UINT slot ) noexcept
 	{
 		using namespace std::string_literals;
@@ -111,6 +120,14 @@ public:
 		GFX_THROW_INFO_ONLY( GetContext( gfx )->PSSetConstantBuffers( slot,1u,pConstantBuffer.GetAddressOf() ) );
 	}
 
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,UINT slot = 0u ) noexcept( !IS_DEBUG )
+	{
+		return BindableCodex::Resolve<PixelConstantBuffer<C>>( gfx,slot );
+	}
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,const C& consts,UINT slot = 0u ) noexcept( !IS_DEBUG )
+	{
+		return BindableCodex::Resolve<PixelConstantBuffer<C>>( gfx,consts,slot );
+	}
 	static std::string GenerateUID( UINT slot ) noexcept
 	{
 		using namespace std::string_literals;

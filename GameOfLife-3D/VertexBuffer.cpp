@@ -1,5 +1,6 @@
 #include "VertexBuffer.h"
 #include "GraphicsThrowMacros.h"
+#include "BindableCodex.h"
 
 namespace wrl = Microsoft::WRL;
 
@@ -24,6 +25,11 @@ void VertexBuffer::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetVertexBuffers( 0u,1u,pVertexBuffer.GetAddressOf(),&stride,&offset ) );
+}
+
+std::shared_ptr<Bindable> VertexBuffer::Resolve( Graphics& gfx,const std::string& tag,const VertexData& vertices ) noexcept( !IS_DEBUG )
+{
+	return BindableCodex::Resolve<VertexBuffer>( gfx,tag,vertices );
 }
 
 std::string VertexBuffer::GetUID() const noexcept

@@ -1,6 +1,7 @@
 #include "VertexShader.h"
 #include "GraphicsThrowMacros.h"
 #include <d3dcompiler.h>
+#include "BindableCodex.h"
 
 #pragma comment( lib,"D3DCompiler.lib" )
 
@@ -25,6 +26,11 @@ void VertexShader::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
 ID3DBlob* VertexShader::GetBlob() noexcept
 {
     return pBlob.Get();
+}
+
+std::shared_ptr<Bindable> VertexShader::Resolve( Graphics& gfx,const std::wstring& filePath ) noexcept( !IS_DEBUG )
+{
+    return BindableCodex::Resolve<VertexShader>( gfx,filePath );
 }
 
 std::string VertexShader::GenerateUID( const std::wstring& filePath ) noexcept

@@ -2,6 +2,7 @@
 #include "Graphics.h"
 #include <string>
 #include <typeinfo>
+#include <memory>
 
 class Bindable
 {

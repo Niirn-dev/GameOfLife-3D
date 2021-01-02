@@ -1,5 +1,6 @@
 #include "IndexBuffer.h"
 #include "GraphicsThrowMacros.h"
+#include "BindableCodex.h"
 
 IndexBuffer::IndexBuffer( Graphics& gfx,const std::string& tag,const std::vector<unsigned short>& indices )
     :
@@ -25,6 +26,11 @@ void IndexBuffer::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
         DXGI_FORMAT_R16_UINT,
         0u
     ) );
+}
+
+std::shared_ptr<Bindable> IndexBuffer::Resolve( Graphics& gfx,const std::string& tag,const std::vector<unsigned short>& indices ) noexcept( !IS_DEBUG )
+{
+    return BindableCodex::Resolve<IndexBuffer>( gfx,tag,indices );
 }
 
 std::string IndexBuffer::GetUID() const noexcept

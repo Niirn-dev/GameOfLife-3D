@@ -11,6 +11,7 @@ public:
 	VertexBuffer( Graphics& gfx,const VertexData& vertices );
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override;
 
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,const std::string& tag,const VertexData& vertices ) noexcept( !IS_DEBUG );
 	template<typename...Ignore>
 	static std::string GenerateUID( const std::string& tag,Ignore&&... ignore ) noexcept
 	{

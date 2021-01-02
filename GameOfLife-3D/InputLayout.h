@@ -9,6 +9,7 @@ public:
 	InputLayout( Graphics& gfx,const VertexLayout& layout,ID3DBlob* pBlob );
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override;
 
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,const VertexLayout& layout,ID3DBlob* pBlob ) noexcept( !IS_DEBUG );
 	template<typename...Ignore>
 	static std::string GenerateUID( const VertexLayout& layout,Ignore&&... ignore ) noexcept
 	{

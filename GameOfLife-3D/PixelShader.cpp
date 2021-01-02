@@ -1,6 +1,7 @@
 #include "PixelShader.h"
 #include "GraphicsThrowMacros.h"
 #include <d3dcompiler.h>
+#include "BindableCodex.h"
 
 #pragma comment( lib,"D3DCompiler.lib" )
 
@@ -26,6 +27,11 @@ void PixelShader::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->PSSetShader( pPixelShader.Get(),nullptr,0u ) );
+}
+
+std::shared_ptr<Bindable> PixelShader::Resolve( Graphics& gfx,const std::wstring& filePath ) noexcept( !IS_DEBUG )
+{
+	return BindableCodex::Resolve<PixelShader>( gfx,filePath );
 }
 
 std::string PixelShader::GenerateUID( const std::wstring& filePath ) noexcept

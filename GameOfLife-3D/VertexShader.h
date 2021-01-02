@@ -9,6 +9,7 @@ public:
 	void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) override;
 	ID3DBlob* GetBlob() noexcept;
 
+	static std::shared_ptr<Bindable> Resolve( Graphics& gfx,const std::wstring& filePath ) noexcept( !IS_DEBUG );
 	static std::string GenerateUID( const std::wstring& filePath ) noexcept;
 	std::string GetUID() const noexcept override;
 private:
