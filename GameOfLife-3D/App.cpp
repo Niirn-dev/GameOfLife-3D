@@ -46,5 +46,4 @@ void App::DoFrame()
 
 	light.BindLightBuffer( wnd.Gfx() );
 	sphere.Draw( wnd.Gfx() );
-	light.Draw( wnd.Gfx() );
 }
