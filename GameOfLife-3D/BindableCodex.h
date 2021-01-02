@@ -9,6 +9,7 @@
 template<class B>
 concept Bind = requires {
 	std::is_base_of_v<Bindable,B>;
+	B::GenerateUID;
 };
 
 class BindableCodex
