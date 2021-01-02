@@ -14,19 +14,19 @@ PhongSphere::PhongSphere( Graphics& gfx,int nSubdivisions,float radius )
 	auto mesh = Sphere::MakeIcoSphere( nSubdivisions );
 	const auto meshTag = typeid( PhongSphere ).name() + "#"s + std::to_string( nSubdivisions );
 
-	AddBind( std::make_shared<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+	AddBind( Topology::Resolve( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
 
-	AddBind( std::make_shared<VertexBuffer>( gfx,meshTag,mesh.vertices ) );
+	AddBind( VertexBuffer::Resolve( gfx,meshTag,mesh.vertices ) );
 
-	auto pvs = std::make_shared<VertexShader>( gfx,L"PhongVS.cso" );
-	auto pvsb = pvs->GetBlob();
+	auto pvs = VertexShader::Resolve( gfx,L"PhongVS.cso" );
+	auto pvsb = std::static_pointer_cast<VertexShader>( pvs )->GetBlob();
 	AddBind( std::move( pvs ) );
 
-	AddBind( std::make_shared<InputLayout>( gfx,mesh.vertices.GetLayout(),pvsb ) );
+	AddBind( InputLayout::Resolve( gfx,mesh.vertices.GetLayout(),pvsb ) );
 
-	AddBind( std::make_shared<PixelShader>( gfx,L"PhongPS.cso" ) );
+	AddBind( PixelShader::Resolve( gfx,L"PhongPS.cso" ) );
 
-	AddBind( std::make_shared<IndexBuffer>( gfx,meshTag,mesh.indices ) );
+	AddBind( IndexBuffer::Resolve( gfx,meshTag,mesh.indices ) );
 
 	AddBind( std::make_shared<TransformCBuf>( gfx,*this ) );
 }

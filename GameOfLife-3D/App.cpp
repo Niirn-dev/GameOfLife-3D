@@ -6,9 +6,6 @@
 #include <iterator>
 #include "NiiMath.h"
 
-#include "BindableCommon.h"
-#include "Sphere.h"
-
 App::App()
 	:
 	wnd( 1600,900,"Game of Life" ),
