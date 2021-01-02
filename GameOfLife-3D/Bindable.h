@@ -1,11 +1,19 @@
 #pragma once
 #include "Graphics.h"
+#include <string>
+#include <typeinfo>
 
 class Bindable
 {
 public:
 	virtual ~Bindable() = default;
 	virtual void Bind( Graphics& gfx ) noexcept( !IS_DEBUG ) = 0;
+	virtual std::string GetUID() const noexcept
+	{
+		assert( false && "GetUID not defined" );
+		using namespace std::string_literals;
+		return "UNDEFINED"s;
+	};
 
 protected:
 	ID3D11Device* GetDevice( Graphics& gfx ) noexcept;

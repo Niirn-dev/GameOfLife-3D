@@ -3,12 +3,20 @@
 
 namespace wrl = Microsoft::WRL;
 
-VertexBuffer::VertexBuffer( Graphics& gfx,const VertexData& vertices )
+VertexBuffer::VertexBuffer( Graphics& gfx,const std::string& tag,const VertexData& vertices )
 	:
+	tag( tag ),
 	stride( (UINT)vertices.GetLayout().SizeBytes() ),
 	offset( 0u )
 {
 	CreateBuffer( gfx,vertices );
+}
+
+VertexBuffer::VertexBuffer( Graphics& gfx,const VertexData& vertices )
+	:
+	VertexBuffer{ gfx,"?",vertices }
+{
+	assert( false && "Buffer tag not set" );
 }
 
 void VertexBuffer::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
@@ -16,6 +24,11 @@ void VertexBuffer::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->IASetVertexBuffers( 0u,1u,pVertexBuffer.GetAddressOf(),&stride,&offset ) );
+}
+
+std::string VertexBuffer::GetUID() const noexcept
+{
+	return GenerateUID( tag );
 }
 
 void VertexBuffer::UpdateBuffer( Graphics& gfx,const VertexData& vertices )

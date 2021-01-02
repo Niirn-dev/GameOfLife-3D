@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Bindable.h"
+#include "BindableCodex.h"
 #include "IndexBuffer.h"
 #include "InputLayout.h"
 #include "PixelShader.h"

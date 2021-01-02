@@ -6,11 +6,25 @@
 #include <iterator>
 #include "NiiMath.h"
 
+#include "BindableCommon.h"
+#include "Sphere.h"
+
 App::App()
 	:
 	wnd( 1600,900,"Game of Life" ),
 	light( wnd.Gfx() )
 {
+	{
+		auto mesh = Sphere::MakeIcoSphere();
+		using namespace std::string_literals;
+		auto vb0 = BindableCodex::Resolve<VertexBuffer>( wnd.Gfx(),"TEST"s,mesh.vertices );
+		{
+			auto vb1 = BindableCodex::Resolve<VertexBuffer>( wnd.Gfx(),"TEST"s,mesh.vertices );
+			auto vb2 = BindableCodex::Resolve<VertexBuffer>( wnd.Gfx(),"TEST"s,mesh.vertices );
+		}
+		int q = 123;
+	}
+
 	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,wnd.Gfx().GetAspectRatio(),0.5f,40.0f ) );
 
 	auto rng = std::mt19937( std::random_device{}() );

@@ -5,6 +5,8 @@
 #pragma comment( lib,"D3DCompiler.lib" )
 
 PixelShader::PixelShader( Graphics& gfx,const std::wstring& filePath )
+	:
+	path( filePath )
 {
 	INFOMAN( gfx );
 
@@ -24,4 +26,16 @@ void PixelShader::Bind( Graphics& gfx ) noexcept( !IS_DEBUG )
 	INFOMAN_ONLY( gfx );
 
 	GFX_THROW_INFO_ONLY( GetContext( gfx )->PSSetShader( pPixelShader.Get(),nullptr,0u ) );
+}
+
+std::string PixelShader::GenerateUID( const std::wstring& filePath ) noexcept
+{
+	using namespace std::string_literals;
+	std::string path{ filePath.begin(),filePath.end() };
+	return typeid( PixelShader ).name() + "#"s + path;
+}
+
+std::string PixelShader::GetUID() const noexcept
+{
+	return GenerateUID( path );
 }

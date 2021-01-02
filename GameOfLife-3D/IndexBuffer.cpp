@@ -1,11 +1,19 @@
 #include "IndexBuffer.h"
 #include "GraphicsThrowMacros.h"
 
-IndexBuffer::IndexBuffer( Graphics& gfx,const std::vector<unsigned short>& indices )
+IndexBuffer::IndexBuffer( Graphics& gfx,const std::string& tag,const std::vector<unsigned short>& indices )
     :
+    tag( tag ),
     count( (UINT)indices.size() )
 {
     CreateBuffer( gfx,indices );
+}
+
+IndexBuffer::IndexBuffer( Graphics& gfx,const std::vector<unsigned short>& indices )
+    :
+    IndexBuffer{ gfx,"?",indices }
+{
+    assert( false && "Buffer tag not set" );
 }
 
 void IndexBuffer::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
@@ -17,6 +25,11 @@ void IndexBuffer::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
         DXGI_FORMAT_R16_UINT,
         0u
     ) );
+}
+
+std::string IndexBuffer::GetUID() const noexcept
+{
+    return GenerateUID( tag );
 }
 
 void IndexBuffer::UpdateBuffer( Graphics& gfx,const std::vector<unsigned short>& indices )

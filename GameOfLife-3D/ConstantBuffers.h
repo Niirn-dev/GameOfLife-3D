@@ -78,6 +78,20 @@ public:
 
 		GFX_THROW_INFO_ONLY( GetContext( gfx )->VSSetConstantBuffers( slot,1u,pConstantBuffer.GetAddressOf() ) );
 	}
+
+	static std::string GenerateUID( UINT slot ) noexcept
+	{
+		using namespace std::string_literals;
+		return typeid( VertexConstantBuffer<C> ).name() + "#"s + std::to_string( slot );
+	}
+	static std::string GenerateUID( const C& consts,UINT slot ) noexcept
+	{
+		return GenerateUID( slot );
+	}
+	std::string GetUID() const noexcept override
+	{
+		return GenerateUID( slot );
+	}
 };
 
 template<class C>
@@ -95,5 +109,19 @@ public:
 		INFOMAN_ONLY( gfx );
 
 		GFX_THROW_INFO_ONLY( GetContext( gfx )->PSSetConstantBuffers( slot,1u,pConstantBuffer.GetAddressOf() ) );
+	}
+
+	static std::string GenerateUID( UINT slot ) noexcept
+	{
+		using namespace std::string_literals;
+		return typeid( PixelConstantBuffer<C> ).name() + "#"s + std::to_string( slot );
+	}
+	static std::string GenerateUID( const C& consts,UINT slot ) noexcept
+	{
+		return GenerateUID( slot );
+	}
+	std::string GetUID() const noexcept override
+	{
+		return GenerateUID( slot );
 	}
 };

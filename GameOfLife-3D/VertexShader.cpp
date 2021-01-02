@@ -5,6 +5,8 @@
 #pragma comment( lib,"D3DCompiler.lib" )
 
 VertexShader::VertexShader( Graphics& gfx,const std::wstring& filePath )
+    :
+    path( filePath )
 {
     INFOMAN( gfx );
 
@@ -23,4 +25,16 @@ void VertexShader::Bind( Graphics & gfx ) noexcept( !IS_DEBUG )
 ID3DBlob* VertexShader::GetBlob() noexcept
 {
     return pBlob.Get();
+}
+
+std::string VertexShader::GenerateUID( const std::wstring& filePath ) noexcept
+{
+    using namespace std::string_literals;
+    std::string path{ filePath.begin(),filePath.end() };
+    return typeid( VertexShader ).name() + "#"s + path;
+}
+
+std::string VertexShader::GetUID() const noexcept
+{
+    return GenerateUID( path );
 }
