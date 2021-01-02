@@ -6,6 +6,7 @@ class PhongSphere : public Drawable
 {
 public:
 	PhongSphere( Graphics& gfx,int nSubdivisions = 2,float radius = 1.0f );
+	void SetSecondaryTransformation( DirectX::FXMMATRIX transform ) noexcept;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 	
 	const DirectX::XMFLOAT3& GetPosition() const noexcept;
@@ -24,4 +25,5 @@ private:
 	float roll = 0.0f;
 	static constexpr float dAngle = 1.0f;
 	float r;
+	DirectX::XMMATRIX secondaryTransform = DirectX::XMMatrixIdentity();
 };

@@ -1,13 +1,30 @@
 #include "App.h"
 #include "imgui/imgui.h"
 
+#include <random>
+#include <algorithm>
+#include <iterator>
+#include "NiiMath.h"
+
 App::App()
 	:
 	wnd( 1600,900,"Game of Life" ),
-	sphere( wnd.Gfx() ),
 	light( wnd.Gfx() )
 {
 	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,wnd.Gfx().GetAspectRatio(),0.5f,40.0f ) );
+
+	auto rng = std::mt19937( std::random_device{}() );
+	auto sdDist = std::uniform_int_distribution<int>{ 0,4 };
+	auto rDist = std::uniform_real_distribution<float>{ 0.2f,1.2f };
+	auto orbitDist = std::normal_distribution<float>{ 7.0f,4.0f };
+	auto aDist = std::uniform_real_distribution<float>{ 0.0f,2.0f * PI };
+	auto asDist = std::uniform_real_distribution<float>{ -PI,PI };
+
+	std::generate_n( std::back_inserter( spherePtrs ),nSpheres,
+					 [&]() 
+					 {
+						 return std::make_unique<TestSphere>( wnd.Gfx(),rng,sdDist,rDist,orbitDist,aDist,asDist );
+					 } );
 }
 
 int App::Go()
@@ -27,7 +44,6 @@ int App::Go()
 
 void App::DoFrame()
 {
-	sphere.SpawnControlWindow();
 	light.SpawnControlWindow();
 	cam.SpawnControlWindow();
 
@@ -42,8 +58,10 @@ void App::DoFrame()
 
 	wnd.Gfx().SetCamera( cam.GetMatrix() );
 
-	sphere.Update( 1.0f / 60.0f );
-
 	light.BindLightBuffer( wnd.Gfx() );
-	sphere.Draw( wnd.Gfx() );
+	for ( auto& ps : spherePtrs )
+	{
+		ps->Update( 1.0f / 60.0f );
+		ps->Draw( wnd.Gfx() );
+	}
 }

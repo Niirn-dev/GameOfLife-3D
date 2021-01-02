@@ -5,6 +5,9 @@
 #include "TestSphere.h"
 #include "PointLight.h"
 
+#include <vector>
+#include <memory>
+
 class App
 {
 public:
@@ -20,6 +23,7 @@ private:
 	ImguiManager imguiManager;
 	Window wnd;
 	Camera cam;
-	TestSphere sphere;
+	static constexpr size_t nSpheres = 20;
+	std::vector<std::unique_ptr<TestSphere>> spherePtrs;
 	PointLight light;
 };
