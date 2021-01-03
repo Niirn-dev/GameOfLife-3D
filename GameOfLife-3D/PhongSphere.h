@@ -11,6 +11,7 @@ public:
 	
 	const DirectX::XMFLOAT3& GetPosition() const noexcept;
 	void SetPosition( const DirectX::XMFLOAT3& pos_in ) noexcept;
+	void SetPosition( DirectX::FXMVECTOR pos_in ) noexcept;
 	void IncPosition( const DirectX::XMFLOAT3& dPos ) noexcept;
 	void SetOrientation( float pitch_in,float yaw_in,float roll_in ) noexcept;
 	void IncOrientation( float dPitch,float dYaw,float dRoll ) noexcept;

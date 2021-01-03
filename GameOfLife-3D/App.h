@@ -3,8 +3,8 @@
 #include "ImguiManager.h"
 #include "Window.h"
 #include "Camera.h"
-#include "TestSphere.h"
 #include "PointLight.h"
+#include "Planet.h"
 
 #include <vector>
 #include <memory>
@@ -25,7 +25,6 @@ private:
 	Window wnd;
 	Timer timer;
 	Camera cam;
-	static constexpr size_t nSpheres = 20;
-	std::vector<std::unique_ptr<TestSphere>> spherePtrs;
+	Planet p;
 	PointLight light;
 };

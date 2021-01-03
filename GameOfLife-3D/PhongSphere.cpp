@@ -54,6 +54,11 @@ void PhongSphere::SetPosition( const DirectX::XMFLOAT3& pos_in ) noexcept
 	pos = pos_in;
 }
 
+void PhongSphere::SetPosition( DirectX::FXMVECTOR pos_in ) noexcept
+{
+	dx::XMStoreFloat3( &pos,pos_in );
+}
+
 void PhongSphere::IncPosition( const DirectX::XMFLOAT3& dPos ) noexcept
 {
 	dx::XMStoreFloat3(
