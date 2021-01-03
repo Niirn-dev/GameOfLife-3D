@@ -27,8 +27,8 @@ private:
 
 		static constexpr int minSubdiv = 0;
 		static constexpr int maxSubdiv = 4;
-		static constexpr float meanRadius = 8.0f;
-		static constexpr float sigmaRadius = 3.0f;
+		static constexpr float meanRadius = 3.0f;
+		static constexpr float sigmaRadius = 1.5f;
 		static constexpr int minOrbit = 0;
 		static constexpr int maxOrbit = 6;
 		static constexpr float minAngle = -PI;
