@@ -1,4 +1,5 @@
 #pragma once
+#include "Timer.h"
 #include "ImguiManager.h"
 #include "Window.h"
 #include "Camera.h"
@@ -17,11 +18,12 @@ public:
 
 	int Go();
 private:
-	void DoFrame();
+	void DoFrame( float dt );
 
 private:
 	ImguiManager imguiManager;
 	Window wnd;
+	Timer timer;
 	Camera cam;
 	static constexpr size_t nSpheres = 20;
 	std::vector<std::unique_ptr<TestSphere>> spherePtrs;

@@ -37,12 +37,12 @@ int App::Go()
 		}
 
 		wnd.Gfx().BeginFrame( 0.12f,0.0f,0.08f );
-		DoFrame();
+		DoFrame( timer.Mark() );
 		wnd.Gfx().EndFrame();
 	}
 }
 
-void App::DoFrame()
+void App::DoFrame( float dt )
 {
 	light.SpawnControlWindow();
 	cam.SpawnControlWindow();
@@ -61,7 +61,7 @@ void App::DoFrame()
 	light.BindLightBuffer( wnd.Gfx() );
 	for ( auto& ps : spherePtrs )
 	{
-		ps->Update( 1.0f / 60.0f );
+		ps->Update( dt );
 		ps->Draw( wnd.Gfx() );
 	}
 }
