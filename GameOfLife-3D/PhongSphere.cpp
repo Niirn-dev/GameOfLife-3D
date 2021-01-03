@@ -31,17 +31,17 @@ PhongSphere::PhongSphere( Graphics& gfx,int nSubdivisions,float radius )
 	AddBind( std::make_shared<TransformCBuf>( gfx,*this ) );
 }
 
-void PhongSphere::SetSecondaryTransformation( DirectX::FXMMATRIX transform ) noexcept
+void PhongSphere::SetParentTransformation( DirectX::FXMMATRIX transform ) noexcept
 {
-	secondaryTransform = transform;
+	parentTransform = transform;
 }
 
 DirectX::XMMATRIX PhongSphere::GetTransformXM() const noexcept
 {
-	return dx::XMMatrixScaling( r,r,r ) *
+	return parentTransform * 
+		dx::XMMatrixScaling( r,r,r ) *
 		dx::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
-		dx::XMMatrixTranslation( pos.x,pos.y,pos.z ) *
-		secondaryTransform;
+		dx::XMMatrixTranslation( pos.x,pos.y,pos.z );
 }
 
 const DirectX::XMFLOAT3& PhongSphere::GetPosition() const noexcept

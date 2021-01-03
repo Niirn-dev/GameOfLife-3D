@@ -89,12 +89,13 @@ void Planet::Update( float dt ) noexcept
 	mesh.IncOrientation( dPlanetPitch,dPlanetYaw,dPlanetRoll );
 }
 
-void Planet::Draw( Graphics& gfx ) noexcept( !IS_DEBUG )
+void Planet::Draw( Graphics& gfx,DirectX::FXMMATRIX parentTransform ) noexcept( !IS_DEBUG )
 {
+	mesh.SetParentTransformation( parentTransform );
 	mesh.Draw( gfx );
 	for ( auto& mp : moonPtrs )
 	{
-		mp->Draw( gfx );
+		mp->Draw( gfx,mesh.GetTransformXM() );
 	}
 }
 

@@ -49,7 +49,7 @@ private:
 public:
 	Planet( Graphics& gfx,int level );
 	void Update( float dt ) noexcept;
-	void Draw( Graphics& gfx ) noexcept( !IS_DEBUG );
+	void Draw( Graphics& gfx, DirectX::FXMMATRIX parentTransform = DirectX::XMMatrixIdentity() ) noexcept( !IS_DEBUG );
 private:
 	void UpdatePosition( float dt ) noexcept;
 	void WrapAngles() noexcept;
