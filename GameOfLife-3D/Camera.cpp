@@ -10,19 +10,20 @@ Camera::Camera() noexcept
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 {
-    const auto vecPos = dx::XMLoadFloat3( &pos );
-    const auto vecLookAt = dx::XMVectorAdd(
-        vecPos,
-        dx::XMVector3Transform(
-            dx::XMVectorSet( 0.0f,0.0f,1.0f,0.0f ),
-            dx::XMMatrixRotationRollPitchYaw( pitch,yaw,0.0f )
-        )
+    const auto rotMtx = dx::XMMatrixRotationRollPitchYaw( pitch,yaw,0.0f );
+    const auto vecPos = dx::XMVector3Transform(
+        dx::XMVectorSet( 0.0f,0.0f,-r,0.0f ),
+        rotMtx
+    );
+    const auto vecUp = dx::XMVector3Transform(
+            dx::XMVectorSet( 0.0f,1.0f,0.0f,0.0f ),
+            rotMtx
     );
 
     return DirectX::XMMatrixLookAtLH(
         vecPos,
-        vecLookAt,
-        dx::XMVectorSet( 0.0f,1.0f,0.0f,0.0f )
+        dx::XMVectorSet( 0.0f,0.0f,0.0f,0.0f ),
+        vecUp
     );
 }
 
@@ -30,13 +31,8 @@ void Camera::SpawnControlWindow() noexcept
 {
     if ( ImGui::Begin( "Camera" ) )
     {
-        ImGui::Text( "Position" );
-        ImGui::SliderFloat( "X",&pos.x,-70.0f,70.0f,"%.1f" );
-        ImGui::SliderFloat( "Y",&pos.y,-70.0f,70.0f,"%.1f" );
-        ImGui::SliderFloat( "Z",&pos.z,-70.0f,70.0f,"%.1f" );
-
-        ImGui::Text( "Orientation" );
-        ImGui::SliderAngle( "Pitch",&pitch,-89.95f,89.95f );
+        ImGui::SliderFloat( "Distance",&r,1.0f,70.0f,"%.1f" );
+        ImGui::SliderAngle( "Pitch",&pitch,-180.0f,180.0f );
         ImGui::SliderAngle( "Yaw",&yaw,-180.0f,180.0f );
 
         if ( ImGui::Button( "Reset" ) )
@@ -50,7 +46,7 @@ void Camera::SpawnControlWindow() noexcept
 
 void Camera::Reset() noexcept
 {
-    dx::XMStoreFloat3( &pos,{ 0.0f,0.0f,-70.0f } );
+    r = 70.0f;
     pitch = 0.0f;
     yaw = 0.0f;
 }

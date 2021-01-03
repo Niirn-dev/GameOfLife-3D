@@ -45,5 +45,6 @@ void App::DoFrame( float dt )
 	p.Update( dt );
 
 	light.BindLightBuffer( wnd.Gfx() );
+	light.Draw( wnd.Gfx() );
 	p.Draw( wnd.Gfx() );
 }

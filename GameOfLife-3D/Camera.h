@@ -11,7 +11,7 @@ public:
 private:
 	void Reset() noexcept;
 private:
-	DirectX::XMFLOAT3 pos = {};
+	float r = 0.0f;
 	float pitch = 0.0f;
 	float yaw = 0.0f;
 	static constexpr float travelSpeed = 10.0f;

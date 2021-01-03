@@ -4,7 +4,7 @@
 
 PointLight::PointLight( Graphics& gfx )
 	:
-	mesh( gfx,0,0.5f ),
+	mesh( gfx,4,2.5f ),
 	pCBuff( std::make_unique<PixelConstantBuffer<LightBuffer>>( gfx ) )
 {
 	Reset();
@@ -61,7 +61,7 @@ void PointLight::Reset() noexcept
 {
 	lightCBuf = 
 	{
-		{ 5.0f,50.0f,0.0f },
+		{ 0.0f,0.0f,0.0f },
 		{ 0.012f,0.0f,0.008f },
 		{ 1.0f,0.0f,0.0f },
 		22.0f,
