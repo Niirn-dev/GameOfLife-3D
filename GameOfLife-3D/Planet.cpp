@@ -62,21 +62,21 @@ int Planet::Factory::Moons( int level ) noexcept
 Planet::Planet( Graphics& gfx,
 				int level )
 	:
-	radius( std::max( minRadius,4.0f / (float)( level + 1 ) ) ),
-	startPos( 0.0f,0.0f,2.0f * ( 10.0f / (float)( level + 1 ) ) ),
-	dPlanetPitch( 0.0f ),
-	dPlanetYaw( 0.0f ),
-	dPlanetRoll( 0.0f ),
-	dPitch( 0.0f ),
-	dYaw( 0.1f - (float)( level ) * 2.0f ),
-	dRoll( 0.0f ),
-	pitch( 0.0f ),
-	yaw( 0.0f ),
-	roll( 0.0f ),
-	mesh( gfx,std::max( 0,1 - level ),radius )
+	radius( std::max( minRadius,Factory::Get().Radius( level ) ) ),
+	startPos( 0.0f,0.0f,Factory::Get().Orbit( level ) ),
+	dPlanetPitch( Factory::Get().AngleSpeed( level ) ),
+	dPlanetYaw( Factory::Get().AngleSpeed( level ) ),
+	dPlanetRoll( Factory::Get().AngleSpeed( level ) ),
+	dPitch( Factory::Get().AngleSpeed( level ) ),
+	dYaw( Factory::Get().AngleSpeed( level ) ),
+	dRoll( Factory::Get().AngleSpeed( level ) ),
+	pitch( Factory::Get().Angle( level ) ),
+	yaw( Factory::Get().Angle( level ) ),
+	roll( Factory::Get().Angle( level ) ),
+	mesh( gfx,Factory::Get().Subdivision( level ),radius )
 {
 	std::generate_n( std::back_inserter( moonPtrs ),
-					 1 - level,
+					 Factory::Get().Moons( level ),
 					 [&]() 
 					 {
 						 return Factory::Get().PlanetPtr( gfx,level + 1 );
