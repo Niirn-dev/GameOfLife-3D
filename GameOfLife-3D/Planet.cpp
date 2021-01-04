@@ -68,7 +68,7 @@ Planet::Planet( Graphics& gfx,
 	dPlanetYaw( 0.0f ),
 	dPlanetRoll( 0.0f ),
 	dPitch( 0.0f ),
-	dYaw( 0.1f + (float)( level ) * 1.6f ),
+	dYaw( 0.1f - (float)( level ) * 2.0f ),
 	dRoll( 0.0f ),
 	pitch( 0.0f ),
 	yaw( 0.0f ),
@@ -87,15 +87,23 @@ void Planet::Update( float dt ) noexcept
 {
 	UpdatePosition( dt );
 	mesh.IncOrientation( dPlanetPitch,dPlanetYaw,dPlanetRoll );
+
+	// update moons
+	for ( auto& mp : moonPtrs )
+	{
+		mp->Update( dt );
+	}
 }
 
 void Planet::Draw( Graphics& gfx,DirectX::FXMMATRIX parentTransform ) noexcept( !IS_DEBUG )
 {
 	mesh.SetParentTransformation( parentTransform );
 	mesh.Draw( gfx );
+
+	const auto parentPos = mesh.GetPosition();
 	for ( auto& mp : moonPtrs )
 	{
-		mp->Draw( gfx,mesh.GetTransformXM() );
+		mp->Draw( gfx,DirectX::XMMatrixTranslation( parentPos.x,parentPos.y,parentPos.z ) );
 	}
 }
 
