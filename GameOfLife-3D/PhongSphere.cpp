@@ -38,9 +38,9 @@ void PhongSphere::SetParentTransformation( DirectX::FXMMATRIX transform ) noexce
 
 DirectX::XMMATRIX PhongSphere::GetTransformXM() const noexcept
 {
-	return parentTransform * 
-		dx::XMMatrixScaling( r,r,r ) *
+	return dx::XMMatrixScaling( r,r,r ) *
 		dx::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
+		parentTransform *
 		dx::XMMatrixTranslation( pos.x,pos.y,pos.z );
 }
 

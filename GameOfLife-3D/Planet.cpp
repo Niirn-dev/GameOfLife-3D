@@ -100,10 +100,12 @@ void Planet::Draw( Graphics& gfx,DirectX::FXMMATRIX parentTransform ) noexcept( 
 	mesh.SetParentTransformation( parentTransform );
 	mesh.Draw( gfx );
 
-	const auto parentPos = mesh.GetPosition();
+	const auto currentPos = mesh.GetPosition();
+	const auto currentTransform = parentTransform *
+		DirectX::XMMatrixTranslation( currentPos.x,currentPos.y,currentPos.z );
 	for ( auto& mp : moonPtrs )
 	{
-		mp->Draw( gfx,DirectX::XMMatrixTranslation( parentPos.x,parentPos.y,parentPos.z ) );
+		mp->Draw( gfx,currentTransform );
 	}
 }
 
