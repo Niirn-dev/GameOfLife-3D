@@ -16,11 +16,12 @@ private:
 
 		std::unique_ptr<Planet> PlanetPtr( Graphics& gfx,int level ) const noexcept;
 		int Subdivision( int level ) noexcept;
-		float Radius( int level ) noexcept;
-		float Orbit( int level ) noexcept;
+		int OrbitIndex( int level ) noexcept;
+		float PlanetRadius( int level,int orbit ) noexcept;
+		float OrbitRadius( int level,int orbit ) noexcept;
 		float Angle( int level ) noexcept;
 		float AngleSpeed( int level ) noexcept;
-		int Moons( int level ) noexcept;
+		int Moons( int level,int orbit ) noexcept;
 
 	private:
 		static Factory fctry;
@@ -55,19 +56,26 @@ private:
 	void WrapAngles() noexcept;
 
 private:
-	const DirectX::XMFLOAT3 startPos = {};
-	static constexpr float minRadius = 0.3f;
-	const float radius = 0.4f;
-	const float dPlanetPitch = 1.0f;
-	const float dPlanetYaw = 1.0f;
-	const float dPlanetRoll = 1.0f;
-	const float dPitch = 1.0f;
-	const float dYaw = 1.0f;
-	const float dRoll = 1.0f;
-	float pitch = 0.0f;
-	float yaw = 0.0f;
-	float roll = 0.0f;
+	struct Angles
+	{
+		float pitch = 0.0f;
+		float yaw = 0.0f;
+		float roll = 0.0f;
+	};
+	struct Parameters
+	{
+		float radius = 0.0f;
+		Angles angle;
+		Angles angleSpeed;
+	};
 
-	PhongSphere mesh;
+	struct
+	{
+		int index = 0;
+		Parameters param;
+	} orbitParams;
+	Parameters planetParams;
+
+	std::unique_ptr<PhongSphere> pMesh;
 	std::vector<std::unique_ptr<Planet>> moonPtrs;
 };
