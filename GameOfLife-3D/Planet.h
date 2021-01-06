@@ -29,14 +29,14 @@ private:
 	{
 	private:
 		Factory() noexcept;
-	public:
 		static Factory& Get() noexcept;
-		std::unique_ptr<Planet> PlanetPtr( Graphics& gfx,int level ) const noexcept;
+	public:
+		static std::unique_ptr<Planet> PlanetPtr( Graphics& gfx,int level ) noexcept;
 
-		OrbitAttributes OrbitAttr( int level ) noexcept;
-		Attributes PlanetAttr( int level,int orbitIndex ) noexcept;
-		int MoonCount( int level,int orbit ) noexcept;
-		int Subdivision( int level ) noexcept;
+		static OrbitAttributes OrbitAttr( int level ) noexcept;
+		static Attributes PlanetAttr( int level,int orbitIndex ) noexcept;
+		static int MoonCount( int level,int orbit ) noexcept;
+		static int Subdivision( int level ) noexcept;
 
 	private:
 		int OrbitIndex( int level ) noexcept;

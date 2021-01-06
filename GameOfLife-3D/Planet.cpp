@@ -23,7 +23,7 @@ Planet::Factory& Planet::Factory::Get() noexcept
 	return fctry;
 }
 
-std::unique_ptr<Planet> Planet::Factory::PlanetPtr( Graphics& gfx,int level ) const noexcept
+std::unique_ptr<Planet> Planet::Factory::PlanetPtr( Graphics& gfx,int level ) noexcept
 {
 	return std::make_unique<Planet>( gfx,level );
 }
@@ -31,12 +31,13 @@ std::unique_ptr<Planet> Planet::Factory::PlanetPtr( Graphics& gfx,int level ) co
 Planet::OrbitAttributes Planet::Factory::OrbitAttr( int level ) noexcept
 {
 	OrbitAttributes oa = {};
+	auto& fGet = Factory::Get();
 
-	oa.index = OrbitIndex( level );
-	oa.attr.radius = OrbitRadius( level,oa.index );
+	oa.index = fGet.OrbitIndex( level );
+	oa.attr.radius = fGet.OrbitRadius( level,oa.index );
 
-	oa.attr.angle = GenerateAngles();
-	oa.attr.angleSpeed = GenerateAngleSpeeds();
+	oa.attr.angle = fGet.GenerateAngles();
+	oa.attr.angleSpeed = fGet.GenerateAngleSpeeds();
 
 	return std::move( oa );
 }
@@ -44,23 +45,24 @@ Planet::OrbitAttributes Planet::Factory::OrbitAttr( int level ) noexcept
 Planet::Attributes Planet::Factory::PlanetAttr( int level,int orbitIndex ) noexcept
 {
 	Attributes a = {};
+	auto& fGet = Factory::Get();
 
-	a.radius = PlanetRadius( level,orbitIndex );
+	a.radius = fGet.PlanetRadius( level,orbitIndex );
 
-	a.angle = GenerateAngles();
-	a.angleSpeed = GenerateAngleSpeeds();
+	a.angle = fGet.GenerateAngles();
+	a.angleSpeed = fGet.GenerateAngleSpeeds();
 
 	return std::move( a );
 }
 
 int Planet::Factory::MoonCount( int level,int orbit ) noexcept
 {
-	return std::max( 0,nMoonsDist( rng ) + orbit - 2 * level );
+	return std::max( 0,Factory::Get().nMoonsDist( Factory::Get().rng ) + orbit - 2 * level );
 }
 
 int Planet::Factory::Subdivision( int level ) noexcept
 {
-	return subdivDist( rng );
+	return Factory::Get().subdivDist( Factory::Get().rng );
 }
 
 /************* PRIVATE PORTION **************/
@@ -105,19 +107,16 @@ Planet::Angles Planet::Factory::GenerateAngleSpeeds() noexcept
 
 Planet::Planet( Graphics& gfx,
 				int level )
+	:
+	orbitAttrs( Factory::OrbitAttr( level ) ),
+	planetAttrs( Factory::PlanetAttr( level,orbitAttrs.index ) ),
+	pMesh( std::make_unique<PhongSphere>( gfx,Factory::Subdivision( level ),planetAttrs.radius ) )
 {
-	auto& f = Factory::Get();
-
-	orbitAttrs = f.OrbitAttr( level );
-	planetAttrs = f.PlanetAttr( level,orbitAttrs.index );
-
-	pMesh = std::make_unique<PhongSphere>( gfx,f.Subdivision( level ),planetAttrs.radius );
-
 	std::generate_n( std::back_inserter( moonPtrs ),
-					 f.MoonCount( level,orbitAttrs.index ),
+					 Factory::MoonCount( level,orbitAttrs.index ),
 					 [&]() 
 					 {
-						 return f.PlanetPtr( gfx,level + 1 );
+						 return Factory::PlanetPtr( gfx,level + 1 );
 					 } );
 }
 
