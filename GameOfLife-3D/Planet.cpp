@@ -28,10 +28,42 @@ std::unique_ptr<Planet> Planet::Factory::PlanetPtr( Graphics& gfx,int level ) co
 	return std::make_unique<Planet>( gfx,level );
 }
 
+Planet::OrbitAttributes Planet::Factory::OrbitAttr( int level ) noexcept
+{
+	OrbitAttributes oa = {};
+
+	oa.index = OrbitIndex( level );
+	oa.attr.radius = OrbitRadius( level,oa.index );
+
+	oa.attr.angle = GenerateAngles();
+	oa.attr.angleSpeed = GenerateAngleSpeeds();
+
+	return std::move( oa );
+}
+
+Planet::Attributes Planet::Factory::PlanetAttr( int level,int orbitIndex ) noexcept
+{
+	Attributes a = {};
+
+	a.radius = PlanetRadius( level,orbitIndex );
+
+	a.angle = GenerateAngles();
+	a.angleSpeed = GenerateAngleSpeeds();
+
+	return std::move( a );
+}
+
+int Planet::Factory::MoonCount( int level,int orbit ) noexcept
+{
+	return std::max( 0,nMoonsDist( rng ) + orbit - 2 * level );
+}
+
 int Planet::Factory::Subdivision( int level ) noexcept
 {
 	return subdivDist( rng );
 }
+
+/************* PRIVATE PORTION **************/
 
 int Planet::Factory::OrbitIndex( int level ) noexcept
 {
@@ -48,19 +80,26 @@ float Planet::Factory::OrbitRadius( int level,int orbit ) noexcept
 	return (float)nOrbitDist( rng ) * ( 10.0f / (float)( level + 1 ) );
 }
 
-float Planet::Factory::Angle( int level ) noexcept
+Planet::Angles Planet::Factory::GenerateAngles() noexcept
 {
-	return angleDist( rng );
+	Angles angles = {};
+
+	angles.pitch = angleDist( rng );
+	angles.yaw = angleDist( rng );
+	angles.roll = angleDist( rng );
+
+	return std::move( angles );
 }
 
-float Planet::Factory::AngleSpeed( int level ) noexcept
+Planet::Angles Planet::Factory::GenerateAngleSpeeds() noexcept
 {
-	return angleSpeedDist( rng );
-}
+	Angles aSpeed = {};
 
-int Planet::Factory::Moons( int level,int orbit ) noexcept
-{
-	return std::max( 0,nMoonsDist( rng ) + orbit - 2 * level );
+	aSpeed.pitch = angleSpeedDist( rng );
+	aSpeed.yaw = angleSpeedDist( rng );
+	aSpeed.roll = angleSpeedDist( rng );
+
+	return std::move( aSpeed );
 }
 /************* PLANET FACTORY END **************/
 
@@ -69,27 +108,13 @@ Planet::Planet( Graphics& gfx,
 {
 	auto& f = Factory::Get();
 
-	orbitParams.index = f.OrbitIndex( level );
-	orbitParams.param.radius = f.OrbitRadius( level,orbitParams.index );
-	orbitParams.param.angle.pitch = f.Angle( level );
-	orbitParams.param.angle.yaw = f.Angle( level );
-	orbitParams.param.angle.roll = f.Angle( level );
-	orbitParams.param.angleSpeed.pitch = f.AngleSpeed( level );
-	orbitParams.param.angleSpeed.yaw = f.AngleSpeed( level );
-	orbitParams.param.angleSpeed.roll = f.AngleSpeed( level );
+	orbitAttrs = f.OrbitAttr( level );
+	planetAttrs = f.PlanetAttr( level,orbitAttrs.index );
 
-	planetParams.radius = f.PlanetRadius( level,orbitParams.index );
-	planetParams.angle.pitch = f.Angle( level );
-	planetParams.angle.yaw = f.Angle( level );
-	planetParams.angle.roll = f.Angle( level );
-	planetParams.angleSpeed.pitch = f.AngleSpeed( level );
-	planetParams.angleSpeed.yaw = f.AngleSpeed( level );
-	planetParams.angleSpeed.roll = f.AngleSpeed( level );
-
-	pMesh = std::make_unique<PhongSphere>( gfx,f.Subdivision( level ),f.PlanetRadius( level,orbitParams.index ) );
+	pMesh = std::make_unique<PhongSphere>( gfx,f.Subdivision( level ),planetAttrs.radius );
 
 	std::generate_n( std::back_inserter( moonPtrs ),
-					 f.Moons( level,orbitParams.index ),
+					 f.MoonCount( level,orbitAttrs.index ),
 					 [&]() 
 					 {
 						 return f.PlanetPtr( gfx,level + 1 );
@@ -100,9 +125,9 @@ void Planet::Update( float dt ) noexcept
 {
 	UpdatePosition( dt );
 	pMesh->IncOrientation( 
-		planetParams.angleSpeed.pitch,
-		planetParams.angleSpeed.yaw,
-		planetParams.angleSpeed.roll
+		planetAttrs.angleSpeed.pitch,
+		planetAttrs.angleSpeed.yaw,
+		planetAttrs.angleSpeed.roll
 	);
 
 	// update moons
@@ -130,18 +155,18 @@ void Planet::UpdatePosition( float dt ) noexcept
 {
 	namespace dx = DirectX;
 
-	orbitParams.param.angle.pitch += orbitParams.param.angleSpeed.pitch * dt;
-	orbitParams.param.angle.yaw += orbitParams.param.angleSpeed.yaw * dt;
-	orbitParams.param.angle.roll += orbitParams.param.angleSpeed.roll * dt;
+	orbitAttrs.attr.angle.pitch += orbitAttrs.attr.angleSpeed.pitch * dt;
+	orbitAttrs.attr.angle.yaw += orbitAttrs.attr.angleSpeed.yaw * dt;
+	orbitAttrs.attr.angle.roll += orbitAttrs.attr.angleSpeed.roll * dt;
 
 	WrapAngles();
 
 	const auto pos = dx::XMVector3Transform(
-		dx::XMVectorSet( 0.0f,0.0f,orbitParams.param.radius,0.0f ),
+		dx::XMVectorSet( 0.0f,0.0f,orbitAttrs.attr.radius,0.0f ),
 		dx::XMMatrixRotationRollPitchYaw( 
-			orbitParams.param.angle.pitch,
-			orbitParams.param.angle.yaw,
-			orbitParams.param.angle.roll
+			orbitAttrs.attr.angle.pitch,
+			orbitAttrs.attr.angle.yaw,
+			orbitAttrs.attr.angle.roll
 		)
 	);
 	pMesh->SetPosition( pos );
@@ -149,7 +174,7 @@ void Planet::UpdatePosition( float dt ) noexcept
 
 void Planet::WrapAngles() noexcept
 {
-	wrap_angle( orbitParams.param.angle.pitch );
-	wrap_angle( orbitParams.param.angle.yaw );
-	wrap_angle( orbitParams.param.angle.roll );
+	wrap_angle( orbitAttrs.attr.angle.pitch );
+	wrap_angle( orbitAttrs.attr.angle.yaw );
+	wrap_angle( orbitAttrs.attr.angle.roll );
 }

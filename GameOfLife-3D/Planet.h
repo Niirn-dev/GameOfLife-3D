@@ -7,21 +7,43 @@
 class Planet
 {
 private:
+	struct Angles
+	{
+		float pitch = 0.0f;
+		float yaw = 0.0f;
+		float roll = 0.0f;
+	};
+	struct Attributes
+	{
+		float radius = 0.0f;
+		Angles angle;
+		Angles angleSpeed;
+	};
+	struct OrbitAttributes
+	{
+		unsigned short index = 0u;
+		Attributes attr;
+	};
+
 	class Factory
 	{
 	private:
 		Factory() noexcept;
 	public:
 		static Factory& Get() noexcept;
-
 		std::unique_ptr<Planet> PlanetPtr( Graphics& gfx,int level ) const noexcept;
+
+		OrbitAttributes OrbitAttr( int level ) noexcept;
+		Attributes PlanetAttr( int level,int orbitIndex ) noexcept;
+		int MoonCount( int level,int orbit ) noexcept;
 		int Subdivision( int level ) noexcept;
+
+	private:
 		int OrbitIndex( int level ) noexcept;
 		float PlanetRadius( int level,int orbit ) noexcept;
 		float OrbitRadius( int level,int orbit ) noexcept;
-		float Angle( int level ) noexcept;
-		float AngleSpeed( int level ) noexcept;
-		int Moons( int level,int orbit ) noexcept;
+		Angles GenerateAngles() noexcept;
+		Angles GenerateAngleSpeeds() noexcept;
 
 	private:
 		static Factory fctry;
@@ -56,25 +78,8 @@ private:
 	void WrapAngles() noexcept;
 
 private:
-	struct Angles
-	{
-		float pitch = 0.0f;
-		float yaw = 0.0f;
-		float roll = 0.0f;
-	};
-	struct Parameters
-	{
-		float radius = 0.0f;
-		Angles angle;
-		Angles angleSpeed;
-	};
-
-	struct
-	{
-		int index = 0;
-		Parameters param;
-	} orbitParams;
-	Parameters planetParams;
+	OrbitAttributes orbitAttrs;
+	Attributes planetAttrs;
 
 	std::unique_ptr<PhongSphere> pMesh;
 	std::vector<std::unique_ptr<Planet>> moonPtrs;
