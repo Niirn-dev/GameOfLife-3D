@@ -1,7 +1,7 @@
 #include "Planet.h"
 #include <algorithm>
 #include <iterator>
-#include <functional>
+#include <cmath>
 
 // init static instance of planet factory
 Planet::Factory Planet::Factory::fctry{};
@@ -11,8 +11,8 @@ Planet::Factory::Factory() noexcept
 	:
 	rng( std::random_device{}() ),
 	subdivDist( minSubdiv,maxSubdiv ),
-	rDist( meanRadius,sigmaRadius ),
-	nOrbitDist( minOrbit,maxOrbit ),
+	oIdxDist( minOrbit,maxOrbit ),
+	raDist( meanRadiusAdj,sigmaRadiusAdj ),
 	angleDist( minAngle,maxAngle ),
 	angleSpeedDist( minAngleSpeed,maxAngleSpeed ),
 	nMoonsDist( minMoons,maxMoons )
@@ -23,12 +23,12 @@ Planet::Factory& Planet::Factory::Get() noexcept
 	return fctry;
 }
 
-std::unique_ptr<Planet> Planet::Factory::PlanetPtr( Graphics& gfx,int level ) noexcept
+std::unique_ptr<Planet> Planet::Factory::PlanetPtr( Graphics& gfx,unsigned short level ) noexcept
 {
 	return std::make_unique<Planet>( gfx,level );
 }
 
-Planet::OrbitAttributes Planet::Factory::OrbitAttr( int level ) noexcept
+Planet::OrbitAttributes Planet::Factory::OrbitAttr( unsigned short level ) noexcept
 {
 	OrbitAttributes oa = {};
 	auto& fGet = Factory::Get();
@@ -42,12 +42,12 @@ Planet::OrbitAttributes Planet::Factory::OrbitAttr( int level ) noexcept
 	return std::move( oa );
 }
 
-Planet::Attributes Planet::Factory::PlanetAttr( int level,int orbitIndex ) noexcept
+Planet::Attributes Planet::Factory::PlanetAttr( unsigned short level,unsigned short orbIdx ) noexcept
 {
 	Attributes a = {};
 	auto& fGet = Factory::Get();
 
-	a.radius = fGet.PlanetRadius( level,orbitIndex );
+	a.radius = fGet.PlanetRadius( level,orbIdx );
 
 	a.angle = fGet.GenerateAngles();
 	a.angleSpeed = fGet.GenerateAngleSpeeds();
@@ -55,31 +55,38 @@ Planet::Attributes Planet::Factory::PlanetAttr( int level,int orbitIndex ) noexc
 	return std::move( a );
 }
 
-int Planet::Factory::MoonCount( int level,int orbit ) noexcept
+unsigned short Planet::Factory::MoonCount( unsigned short level,unsigned short /*orbIdx*/ ) noexcept
 {
-	return std::max( 0,Factory::Get().nMoonsDist( Factory::Get().rng ) + orbit - 2 * level );
+	return std::max( 
+		0u,
+		Factory::Get().nMoonsDist( Factory::Get().rng ) / ( level + 1u )
+	);
 }
 
-int Planet::Factory::Subdivision( int level ) noexcept
+int Planet::Factory::Subdivision( unsigned short level ) noexcept
 {
 	return Factory::Get().subdivDist( Factory::Get().rng );
 }
 
 /************* PRIVATE PORTION **************/
 
-int Planet::Factory::OrbitIndex( int level ) noexcept
+unsigned short Planet::Factory::OrbitIndex( unsigned short level ) noexcept
 {
-	return nOrbitDist( rng ) / (float)( level + 1 );
+	return std::max( 
+		0u,
+		oIdxDist( rng ) / ( level + 1u )
+	);
 }
 
-float Planet::Factory::PlanetRadius( int level,int orbit ) noexcept
+float Planet::Factory::OrbitRadius( unsigned short level,unsigned short orbIdx ) noexcept
 {
-	return rDist( rng ) - (float)level;
+	return raDist( rng ) * std::pow( 2.0f,(float)orbIdx - 2.0f ) * std::pow( 10.0f,2.0f - (float)level );
 }
 
-float Planet::Factory::OrbitRadius( int level,int orbit ) noexcept
+float Planet::Factory::PlanetRadius( unsigned short level,unsigned short orbIdx ) noexcept
 {
-	return (float)nOrbitDist( rng ) * ( 10.0f / (float)( level + 1 ) );
+	const auto meanR = 1.0f / (float)( std::abs( avgOrbit - orbIdx ) + 1 );
+	return meanR * raDist( rng );
 }
 
 Planet::Angles Planet::Factory::GenerateAngles() noexcept
@@ -106,7 +113,7 @@ Planet::Angles Planet::Factory::GenerateAngleSpeeds() noexcept
 /************* PLANET FACTORY END **************/
 
 Planet::Planet( Graphics& gfx,
-				int level )
+				unsigned short level )
 	:
 	orbitAttrs( Factory::OrbitAttr( level ) ),
 	planetAttrs( Factory::PlanetAttr( level,orbitAttrs.index ) ),

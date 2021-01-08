@@ -31,17 +31,17 @@ private:
 		Factory() noexcept;
 		static Factory& Get() noexcept;
 	public:
-		static std::unique_ptr<Planet> PlanetPtr( Graphics& gfx,int level ) noexcept;
+		static std::unique_ptr<Planet> PlanetPtr( Graphics& gfx,unsigned short level ) noexcept;
 
-		static OrbitAttributes OrbitAttr( int level ) noexcept;
-		static Attributes PlanetAttr( int level,int orbitIndex ) noexcept;
-		static int MoonCount( int level,int orbit ) noexcept;
-		static int Subdivision( int level ) noexcept;
+		static OrbitAttributes OrbitAttr( unsigned short level ) noexcept;
+		static Attributes PlanetAttr( unsigned short level,unsigned short orbIdx ) noexcept;
+		static unsigned short MoonCount( unsigned short level,unsigned short orbIdx ) noexcept;
+		static int Subdivision( unsigned short level ) noexcept;
 
 	private:
-		int OrbitIndex( int level ) noexcept;
-		float PlanetRadius( int level,int orbit ) noexcept;
-		float OrbitRadius( int level,int orbit ) noexcept;
+		unsigned short OrbitIndex( unsigned short level ) noexcept;
+		float OrbitRadius( unsigned short level,unsigned short orbIdx ) noexcept;
+		float PlanetRadius( unsigned short level,unsigned short orbIdx ) noexcept;
 		Angles GenerateAngles() noexcept;
 		Angles GenerateAngleSpeeds() noexcept;
 
@@ -50,27 +50,33 @@ private:
 
 		static constexpr int minSubdiv = 0;
 		static constexpr int maxSubdiv = 4;
-		static constexpr float meanRadius = 3.0f;
-		static constexpr float sigmaRadius = 1.5f;
+
 		static constexpr int minOrbit = 0;
-		static constexpr int maxOrbit = 6;
+		static constexpr int maxOrbit = 5;
+		static constexpr int avgOrbit = ( minOrbit + maxOrbit ) / 2;
+		static constexpr float orbitRadiusOffset = 2.0f;
+
+		static constexpr float meanRadiusAdj = 1.0f;
+		static constexpr float sigmaRadiusAdj = 0.2f;
+
 		static constexpr float minAngle = -PI;
 		static constexpr float maxAngle = PI;
 		static constexpr float minAngleSpeed = -PI / 16.0f;
 		static constexpr float maxAngleSpeed = PI / 16.0f;
+
 		static constexpr int minMoons = 0;
 		static constexpr int maxMoons = 3;
 
 		std::mt19937 rng;
 		std::uniform_int_distribution<int> subdivDist;
-		std::normal_distribution<float> rDist;
-		std::uniform_int_distribution<int> nOrbitDist;
+		std::uniform_int_distribution<unsigned short> oIdxDist;
+		std::normal_distribution<float> raDist;
 		std::uniform_real_distribution<float> angleDist;
 		std::uniform_real_distribution<float> angleSpeedDist;
 		std::uniform_int_distribution<int> nMoonsDist;
 	};
 public:
-	Planet( Graphics& gfx,int level );
+	Planet( Graphics& gfx,unsigned short level );
 	void Update( float dt ) noexcept;
 	void Draw( Graphics& gfx, DirectX::FXMMATRIX parentTransform = DirectX::XMMatrixIdentity() ) noexcept( !IS_DEBUG );
 private:
