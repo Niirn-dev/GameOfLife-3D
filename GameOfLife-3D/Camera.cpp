@@ -39,9 +39,8 @@ void Camera::SpawnControlWindow() noexcept
         {
             Reset();
         }
-
-        ImGui::End();
     }
+    ImGui::End();
 }
 
 void Camera::Reset() noexcept

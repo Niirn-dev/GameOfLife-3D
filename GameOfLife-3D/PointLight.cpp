@@ -52,9 +52,8 @@ void PointLight::SpawnControlWindow() noexcept
 		{
 			Reset();
 		}
-
-		ImGui::End();
 	}
+	ImGui::End();
 }
 
 void PointLight::Reset() noexcept
