@@ -31,7 +31,7 @@ void Camera::SpawnControlWindow() noexcept
 {
     if ( ImGui::Begin( "Camera" ) )
     {
-        ImGui::SliderFloat( "Distance",&r,1.0f,70.0f,"%.1f" );
+        ImGui::SliderFloat( "Distance",&r,1.0f,1000.0f,"%.0f" );
         ImGui::SliderAngle( "Pitch",&pitch,-180.0f,180.0f );
         ImGui::SliderAngle( "Yaw",&yaw,-180.0f,180.0f );
 
@@ -45,7 +45,7 @@ void Camera::SpawnControlWindow() noexcept
 
 void Camera::Reset() noexcept
 {
-    r = 70.0f;
+    r = 180.0f;
     pitch = 0.0f;
     yaw = 0.0f;
 }

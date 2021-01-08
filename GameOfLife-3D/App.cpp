@@ -9,7 +9,7 @@ App::App()
 	p( wnd.Gfx(),0 ),
 	light( wnd.Gfx() )
 {
-	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,wnd.Gfx().GetAspectRatio(),0.5f,1000.0f ) );
+	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,wnd.Gfx().GetAspectRatio(),0.5f,2000.0f ) );
 }
 
 int App::Go()
