@@ -1,17 +1,24 @@
 #pragma once
 #include "Planet.h"
+#include "PointLight.h"
 
 class Star
 {
 public:
 	Star( Graphics& gfx,
-		  std::mt19937& rng,
-		  std::uniform_int_distribution<int> subdivDist,
-		  std::normal_distribution<float> rDist,
-		  std::uniform_int_distribution<unsigned int> nOrbitDist,
-		  std::uniform_real_distribution<float> angleDist,
-		  std::uniform_real_distribution<float> angleVelDist,
-		  std::uniform_int_distribution<unsigned int> nMoonsDist );
+		  const DirectX::XMFLOAT3& modelColor,
+		  const DirectX::XMFLOAT3& diffuseColor,
+		  int nSubdivisions,float radius,
+		  unsigned short nPlanets );
+
+	void AddPlanet( Graphics& gfx ) noexcept( !IS_DEBUG );
+	void Update( float dt ) noexcept;
+	void BindLightAndDraw( Graphics& gfx ) noexcept( !IS_DEBUG );
+
+	void SpawnLightControlWindow() noexcept;
+
 private:
+	std::unique_ptr<PointLight> pPointLight;
+
 	std::vector<std::unique_ptr<Planet>> planetPtrs;
 };

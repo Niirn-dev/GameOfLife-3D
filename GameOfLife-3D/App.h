@@ -3,8 +3,7 @@
 #include "ImguiManager.h"
 #include "Window.h"
 #include "Camera.h"
-#include "PointLight.h"
-#include "Planet.h"
+#include "Star.h"
 
 #include <vector>
 #include <memory>
@@ -25,6 +24,5 @@ private:
 	Window wnd;
 	Timer timer;
 	Camera cam;
-	Planet p;
-	PointLight light;
+	Star s;
 };

@@ -6,8 +6,7 @@
 App::App()
 	:
 	wnd( 1600,900,"Game of Life" ),
-	p( wnd.Gfx(),0 ),
-	light( wnd.Gfx() )
+	s( wnd.Gfx(),{ 0.0f,1.0f,1.0f },{ 1.0f,1.0f,1.0f },4,10.0f,3 )
 {
 	wnd.Gfx().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,wnd.Gfx().GetAspectRatio(),0.5f,2000.0f ) );
 }
@@ -29,7 +28,7 @@ int App::Go()
 
 void App::DoFrame( float dt )
 {
-	light.SpawnControlWindow();
+	s.SpawnLightControlWindow();
 	cam.SpawnControlWindow();
 
 	while ( !wnd.kbd.IsKeyEmpty() )
@@ -42,9 +41,6 @@ void App::DoFrame( float dt )
 	}
 
 	wnd.Gfx().SetCamera( cam.GetMatrix() );
-	p.Update( dt );
-
-	light.BindLightBuffer( wnd.Gfx() );
-	light.Draw( wnd.Gfx() );
-	p.Draw( wnd.Gfx() );
+	s.Update( dt );
+	s.BindLightAndDraw( wnd.Gfx() );
 }

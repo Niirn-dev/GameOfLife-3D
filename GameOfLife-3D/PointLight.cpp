@@ -2,9 +2,16 @@
 #include "BindableCommon.h"
 #include "imgui/imgui.h"
 
-PointLight::PointLight( Graphics& gfx )
+namespace dx = DirectX;
+
+PointLight::PointLight( Graphics& gfx,
+						const dx::XMFLOAT3& modelColor,
+						const dx::XMFLOAT3& diffuseColor,
+						int nSubdivisions,
+						float radius )
 	:
-	mesh( gfx,4,2.5f ),
+	defDiffuseColor( diffuseColor ),
+	mesh( gfx,modelColor,nSubdivisions,radius ),
 	pCBuff( std::make_unique<PixelConstantBuffer<LightBuffer>>( gfx ) )
 {
 	Reset();
@@ -34,10 +41,10 @@ void PointLight::SpawnControlWindow() noexcept
 {
 	if ( ImGui::Begin( "Point Light" ) )
 	{
-		ImGui::Text( "Position" );
-		ImGui::SliderFloat( "X",&lightCBuf.pos.x,-30.0f,30.0f,"%.1f" );
-		ImGui::SliderFloat( "Y",&lightCBuf.pos.y,30.0f,80.0f,"%.1f" );
-		ImGui::SliderFloat( "Z",&lightCBuf.pos.z,-30.0f,30.0f,"%.1f" );
+		// ImGui::Text( "Position" );
+		// ImGui::SliderFloat( "X",&lightCBuf.pos.x,-30.0f,30.0f,"%.1f" );
+		// ImGui::SliderFloat( "Y",&lightCBuf.pos.y,30.0f,80.0f,"%.1f" );
+		// ImGui::SliderFloat( "Z",&lightCBuf.pos.z,-30.0f,30.0f,"%.1f" );
 
 		ImGui::ColorEdit3( "Ambient",&lightCBuf.ambient.x );
 		ImGui::ColorEdit3( "Diffuse",&lightCBuf.diffuse.x );
@@ -62,7 +69,7 @@ void PointLight::Reset() noexcept
 	{
 		{ 0.0f,0.0f,0.0f },
 		{ 0.012f,0.0f,0.008f },
-		{ 1.0f,0.0f,0.0f },
+		defDiffuseColor,
 		22.0f,
 		1.0f,
 		0.07f,
